@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Từ vựng N4 — 30 ngày</title>
-<link rel="stylesheet" href="style.css?v=3">
+<link rel="stylesheet" href="style.css?v=4">
 </head>
 <body>
 <header>
@@ -13,6 +13,7 @@
     <button data-view="home" class="active">Hôm nay</button>
     <button data-view="plan">Lịch 30 ngày</button>
     <button data-view="quiz">Quiz</button>
+    <button data-view="exam">Luyện đề</button>
     <button data-view="list">Danh sách</button>
     <button data-view="settings">⚙︎</button>
   </nav>
@@ -128,6 +129,52 @@
     <div id="quizDone" class="hidden"></div>
   </section>
 
+  <!-- LUYỆN ĐỀ -->
+  <section id="view-exam" class="view hidden">
+    <div id="examSetup">
+      <h3>問題1　漢字読み — Đọc chữ Hán</h3>
+      <p class="muted">Chọn cách viết hiragana đúng cho từ được gạch chân, giống phần 文字・語彙 của đề N4.
+        Làm hết rồi bấm <b>Nộp bài</b> để chấm. Câu sai sẽ tự đưa vào ôn tập.</p>
+
+      <h4>📘 Đề trong sách</h4>
+      <div id="bookTests" class="book-grid"></div>
+      <div class="inline-row">
+        <span>Trộn ngẫu nhiên</span>
+        <input type="number" id="bookMixNum" value="20" min="5" step="1">
+        <span>câu từ tất cả đề sách</span>
+        <button class="btn" id="bookMixStart">Làm</button>
+      </div>
+
+      <h4>🎲 Đề tự tạo từ 806 từ</h4>
+      <label>Phạm vi
+        <select id="examScope">
+          <option value="seen">Các từ đã học</option>
+          <option value="today">Từ của ngày đang học</option>
+          <option value="weak">Từ hay sai</option>
+          <option value="all">Tất cả các từ</option>
+        </select>
+      </label>
+      <label>Số câu
+        <select id="examNum">
+          <option value="9">9 câu (như đề thật)</option>
+          <option value="20">20 câu</option>
+          <option value="30">30 câu</option>
+        </select>
+      </label>
+      <label class="check"><input type="checkbox" id="examFuri"> Hiện furigana cho các chữ Hán khác trong câu (bỏ tick để giống đề thi thật hơn)</label>
+      <button class="btn primary wide" id="examStart">Tạo đề và làm bài</button>
+      <p class="muted" id="examMsg"></p>
+      <div id="examHistory"></div>
+    </div>
+    <div id="examResult" class="hidden"></div>
+    <div id="examPaper" class="hidden">
+      <div class="exam-head"><b id="examName"></b><span id="examTimer">00:00</span><button class="btn" id="examQuit">✕</button></div>
+      <p class="exam-instr">問題1　＿＿＿の　ことばは　ひらがなで　どう　かきますか。１・２・３・４から　いちばん　いい　ものを　ひとつ　えらんで　ください。</p>
+      <div id="examQs"></div>
+      <button class="btn primary wide" id="examSubmit">Nộp bài</button>
+    </div>
+  </section>
+
   <!-- DANH SÁCH -->
   <section id="view-list" class="view hidden">
     <div class="list-tools">
@@ -170,7 +217,7 @@
 
 <div id="toast" class="toast hidden"></div>
 
-<script src="data.js?v=3"></script>
-<script src="app.js?v=3"></script>
+<script src="data.js?v=4"></script>
+<script src="app.js?v=4"></script>
 </body>
 </html>

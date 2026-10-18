@@ -148,6 +148,7 @@ function showView(name) {
   if (name === 'list') renderList();
   if (name === 'settings') renderSettings();
   if (name === 'quiz') resetQuiz();
+  if (name === 'exam') resetExam();
   window.scrollTo(0, 0);
 }
 document.querySelectorAll('nav button').forEach(b => b.addEventListener('click', () => showView(b.dataset.view)));
@@ -383,6 +384,16 @@ $('prevBtn').addEventListener('click', prevCard);
 $('nextBtn').addEventListener('click', nextCard);
 $('speakBtn').addEventListener('click', () => session && speak(session.shown));
 
+// Ghi kết quả quiz/luyện đề: sai thì đưa vào ôn lại ngay hôm nay
+function recordAnswer(w, ok) {
+  const c = ensureCard(w);
+  if (ok) c.right++;
+  else {
+    c.wrong++;
+    if (c.learned) { c.box = 1; c.due = todayStr(); }
+  }
+}
+
 // ===== Quiz =====
 let quiz = null;
 function resetQuiz() {
@@ -495,13 +506,9 @@ function answer(idx) {
     if (q.options[i] === q.answer) b.classList.add('correct');
     else if (i === idx) b.classList.add('wrong');
   });
-  const c = ensureCard(q.w);
-  if (ok) { quiz.score++; c.right++; }
-  else {
-    c.wrong++;
-    quiz.wrong.push(q.w);
-    if (c.learned) { c.box = 1; c.due = todayStr(); } // sai thì đưa vào ôn lại ngay hôm nay
-  }
+  if (ok) quiz.score++;
+  else quiz.wrong.push(q.w);
+  recordAnswer(q.w, ok);
   save();
   const w = q.w;
   $('quizExplain').innerHTML = `${ok ? '✅ Chính xác!' : '❌ Sai rồi.'} <span class="jp"><b>${wordLabel(w)}</b></span>
@@ -532,6 +539,266 @@ function nextQuestion() {
   if (wrong.length) $('retryWrong').addEventListener('click', () => startQuiz(shuffle(wrong), type));
 }
 $('quizNext').addEventListener('click', nextQuestion);
+
+// ===== Luyện đề: 問題1 漢字読み =====
+// Tách câu ví dụ thành phần trước / từ gạch chân / phần sau; chỉ dùng câu có chữ Hán trong [ ]
+function parseM1(w) {
+  if (!w.ex) return null;
+  const m = w.ex.match(/^(.*)\[(.*?)\](.*)$/);
+  if (!m || !m[2].includes('{')) return null;
+  const segs = [];
+  m[2].replace(/\{([^{}|]*)\|([^{}|]*)\}|([^{]+)/g, (_, k, r, plain) => {
+    segs.push(k ? { text: k, read: r, kanji: true } : { text: plain, read: plain, kanji: false });
+    return '';
+  });
+  return { before: m[1], after: m[3], segs,
+    target: segs.map(s => s.text).join(''), answer: segs.map(s => s.read).join('') };
+}
+WORDS.forEach(w => { w.m1 = parseM1(w); });
+
+// Tạo đáp án nhiễu kiểu JLPT: dấu゛゜, âm dài, っ, ゃゅょ, ん
+const VOICE = {}, HANDAKU = {};
+const VP = 'かがきぎくぐけげこごさざしじすずせぜそぞただてでとどはばひびふぶへべほぼ';
+for (let i = 0; i < VP.length; i += 2) { VOICE[VP[i]] = VP[i + 1]; VOICE[VP[i + 1]] = VP[i]; }
+'はぱひぴふぷへぺほぽ'.match(/../g).forEach(p => { HANDAKU[p[0]] = p[1]; HANDAKU[p[1]] = p[0]; });
+const LONG_U = 'こそとのほもよろごぞどぼぽょくすつぬふむゆるぐずぶぷゅ';
+const LONG_I = 'けせてねへめれげぜでべぺ';
+const BEFORE_TSU = 'かきくけこさしすせそたちつてとぱぴぷぺぽ';
+const I_ROW = 'きしちにひみりぎじびぴ';
+const SMALL = { ゃ: 'や', ゅ: 'ゆ', ょ: 'よ', や: 'ゃ', ゆ: 'ゅ', よ: 'ょ' };
+function kanaVariants(s) {
+  const out = new Set();
+  const put = (i, del, ins) => out.add(s.slice(0, i) + ins + s.slice(i + del));
+  for (let i = 0; i < s.length; i++) {
+    const c = s[i], next = s[i + 1], prev = s[i - 1];
+    if (VOICE[c]) put(i, 1, VOICE[c]);
+    if (HANDAKU[c]) put(i, 1, HANDAKU[c]);
+    if (LONG_U.includes(c)) next === 'う' ? put(i + 1, 1, '') : put(i + 1, 0, 'う');
+    if (LONG_I.includes(c)) next === 'い' ? put(i + 1, 1, '') : put(i + 1, 0, 'い');
+    if (c === 'っ') put(i, 1, '');
+    else if (i > 0 && BEFORE_TSU.includes(c) && !'っんうーゃゅょい'.includes(prev)) put(i, 0, 'っ');
+    if (SMALL[c] && I_ROW.includes(prev)) put(i, 1, SMALL[c]);
+    if (c === 'ん' && i > 0) put(i, 1, '');
+  }
+  out.delete(s);
+  return [...out];
+}
+// Chỉ biến đổi phần cách đọc của chữ Hán, giữ nguyên okurigana. Trả về danh sách segs đã biến đổi
+function segVariants(segs) {
+  const res = [];
+  segs.forEach((seg, j) => {
+    if (!seg.kanji) return;
+    kanaVariants(seg.read).forEach(v => res.push(segs.map((s, k) => k === j ? { ...s, read: v } : s)));
+  });
+  return res;
+}
+const joinRead = segs => segs.map(s => s.read).join('');
+const posGroup = w => /^Động từ|^Cặp/.test(w.cat) ? 'v' : /^Tính từ/.test(w.cat) ? 'a' : /^Phó từ/.test(w.cat) ? 'adv' : 'n';
+const allKanji = m => m.segs.every(s => s.kanji);
+function makeM1(w) {
+  const m = w.m1;
+  const opts = [m.answer];
+  const add = v => { if (v && !opts.includes(v) && opts.length < 4) opts.push(v); };
+  // Danh từ ngắn (かみ, ゆび...): đề thật thường cho các từ thật cùng loại, cùng độ dài
+  if (allKanji(m) && m.answer.length <= 3) {
+    const near = o => o !== w && o.m1 && allKanji(o.m1) && posGroup(o) === posGroup(w) &&
+      Math.abs(o.m1.answer.length - m.answer.length) <= 1;
+    shuffle(WORDS.filter(o => near(o) && o.cat === w.cat)).forEach(o => add(o.m1.answer));
+    shuffle(WORDS.filter(near)).forEach(o => add(o.m1.answer));
+  }
+  // Động từ/tính từ: đề thật hay cho các từ khác cùng đuôi chia (およがないで・いそがないで・さわがないで)
+  const tail = m.segs[m.segs.length - 1].kanji ? '' : m.segs[m.segs.length - 1].text;
+  const sameTail = tail ? shuffle(WORDS.filter(o => o !== w && o.m1 && posGroup(o) === posGroup(w) &&
+    !o.m1.segs[o.m1.segs.length - 1].kanji && o.m1.segs[o.m1.segs.length - 1].text === tail)) : [];
+  sameTail.slice(0, 2).forEach(o => add(o.m1.answer));
+  // Bẫy kiểu JLPT: biến đổi 1 lần, chưa đủ thì 2 lần
+  const lvl1 = shuffle(segVariants(m.segs));
+  lvl1.slice(0, 3).forEach(sv => add(joinRead(sv)));
+  for (const sv of lvl1) {
+    if (opts.length >= 4) break;
+    shuffle(segVariants(sv)).slice(0, 2).forEach(s2 => { const v = joinRead(s2); if (v !== m.answer) add(v); });
+  }
+  sameTail.forEach(o => add(o.m1.answer));
+  // Vẫn thiếu: lấy cách đọc từ khác cùng loại
+  shuffle(WORDS.filter(o => o.m1 && o !== w && posGroup(o) === posGroup(w) &&
+    Math.abs(o.m1.answer.length - m.answer.length) <= 1)).forEach(o => add(o.m1.answer));
+  shuffle(WORDS.filter(o => o.m1 && o !== w)).forEach(o => add(o.m1.answer));
+  return { w, answer: m.answer, options: shuffle(opts), pick: null };
+}
+function sentPart(str, furi) {
+  return furi ? esc(str).replace(/\{([^{}|]*)\|([^{}|]*)\}/g, '<ruby>$1<rt>$2</rt></ruby>')
+              : esc(str).replace(/\{([^{}|]*)\|[^{}|]*\}/g, '$1');
+}
+
+// Đề trong sách: câu dạng "...[gạch chân]..." -> câu hỏi
+const BOOK_TESTS = [];
+(typeof MONDAI1 === 'undefined' ? [] : MONDAI1).forEach(q => {
+  let t = BOOK_TESTS.find(x => x.test === q.test);
+  if (!t) BOOK_TESTS.push(t = { test: q.test, qs: [] });
+  t.qs.push(q);
+});
+// Tìm từ vựng ứng với phần gạch chân (để giải thích nghĩa + đưa vào ôn tập)
+function findVocab(target) {
+  target = target.replace(/^[おご]/, '');
+  let best = null;
+  WORDS.forEach(w => {
+    const k = w.kanji.replace('(する)', '').replace('(お)', '');
+    if (!k || !hasKanji(w)) return;
+    const stem = k.replace(/[぀-ゟ]+$/, '');   // bỏ okurigana: 急ぐ -> 急
+    if (target.startsWith(k) || (stem && target.startsWith(stem) && stem.length >= 1 && /[一-鿿]/.test(stem))) {
+      if (!best || k.length > best.k.length) best = { w, k };
+    }
+  });
+  return best?.w || null;
+}
+function bookQuestion(q) {
+  const m = q.sentence.match(/^(.*)\[(.*?)\](.*)$/);
+  const w = findVocab(m[2]);
+  return { w, mean: q.mean, before: esc(m[1]), target: m[2], after: esc(m[3]), answer: q.options[q.answer - 1],
+    options: q.options.slice(), pick: null, circled: q.circled, label: `${q.test} · câu ${q.no}` };
+}
+function genQuestion(w, furi) {
+  const g = makeM1(w);
+  return { w, before: sentPart(w.m1.before, furi), target: w.m1.target, after: sentPart(w.m1.after, furi),
+    answer: g.answer, options: g.options, pick: null, label: '' };
+}
+
+let exam = null;
+function resetExam() {
+  if (exam?.timer) clearInterval(exam.timer);
+  exam = null;
+  $('examSetup').classList.remove('hidden');
+  $('examPaper').classList.add('hidden');
+  $('examResult').classList.add('hidden');
+  $('examMsg').textContent = '';
+  $('examFuri').checked = state.settings.examFuri !== false;
+  const best = state.bookBest || {};
+  $('bookTests').innerHTML = BOOK_TESTS.length ? BOOK_TESTS.map((t, i) => {
+    const b = best[t.test];
+    const cls = !b ? '' : b.score === t.qs.length ? ' done' : ' tried';
+    return `<button class="book-test${cls}" data-i="${i}"><b>${esc(t.test.replace('文字1 ', ''))}</b>
+      <span>${b ? `Cao nhất ${b.score}/${t.qs.length}` : `${t.qs.length} câu`}</span></button>`;
+  }).join('') : '<p class="muted">Chưa có đề trong sách.</p>';
+  $('bookMixNum').max = BOOK_TESTS.reduce((n, t) => n + t.qs.length, 0);
+  const log = state.examLog || [];
+  $('examHistory').innerHTML = log.length
+    ? '<h3>Kết quả gần đây</h3>' + log.slice().reverse().map(r =>
+      `<div class="hist-row"><span>${esc(r.name || '')}</span><span>${r.date.split('-').reverse().slice(0, 2).join('/')}</span><span>${r.score}/${r.n}</span><span class="muted">${fmtTime(r.secs)}</span></div>`).join('')
+    : '';
+}
+const fmtTime = s => `${pad(Math.floor(s / 60))}:${pad(s % 60)}`;
+$('bookTests').addEventListener('click', e => {
+  const b = e.target.closest('.book-test');
+  if (!b) return;
+  const t = BOOK_TESTS[b.dataset.i];
+  startExam(t.qs.map(bookQuestion), t.test, t.test);
+});
+$('bookMixStart').addEventListener('click', () => {
+  const all = BOOK_TESTS.flatMap(t => t.qs);
+  if (!all.length) return;
+  const n = Math.min(Number($('bookMixNum').value) || 9, all.length);
+  startExam(shuffle(all.slice()).slice(0, n).map(bookQuestion), 'Tổng hợp đề sách', null);
+});
+$('examStart').addEventListener('click', () => {
+  const pool = quizPool($('examScope').value).filter(w => w.m1);
+  if (!pool.length) {
+    $('examMsg').textContent = $('examScope').value === 'weak'
+      ? 'Chưa có từ hay sai nào. Học thêm rồi quay lại nhé!'
+      : 'Chưa có từ nào trong phạm vi này — hãy học vài từ trước, hoặc chọn “Tất cả các từ”.';
+    return;
+  }
+  state.settings.examFuri = $('examFuri').checked;
+  save();
+  const n = Math.min(Number($('examNum').value), pool.length);
+  const furi = state.settings.examFuri !== false;
+  startExam(shuffle(pool.slice()).slice(0, n).map(w => genQuestion(w, furi)), 'Đề tự tạo', null);
+});
+function startExam(qs, name, bookTest) {
+  exam = { qs, name, bookTest, start: Date.now() };
+  $('examSetup').classList.add('hidden');
+  $('examResult').classList.add('hidden');
+  $('examPaper').classList.remove('hidden');
+  $('examSubmit').classList.remove('hidden');
+  $('examName').textContent = name;
+  renderExam(false);
+  $('examTimer').textContent = '00:00';
+  exam.timer = setInterval(() => { $('examTimer').textContent = fmtTime(Math.floor((Date.now() - exam.start) / 1000)); }, 1000);
+  window.scrollTo(0, 0);
+}
+function explainHtml(q) {
+  const res = q.pick === null ? '⚪ Chưa làm.' : q.options[q.pick] === q.answer ? '✅ Đúng.' : '❌ Sai.';
+  const w = q.w;
+  let html = `${res} <b class="jp">${esc(q.target)}</b> đọc là <b class="jp">${esc(q.answer)}</b>`;
+  const hv = w?.hv || [...q.target].filter(c => HANVIET[c]).map(c => HANVIET[c]).join(' ');
+  const mean = w?.mean || q.mean;
+  if (mean) html += ` — ${esc(mean)}`;
+  if (hv) html += ` · <span class="hvs">${hv}</span>`;
+  if (q.circled && q.options[q.circled - 1] !== q.answer)
+    html += `<div class="muted">📌 Trên sách bạn từng khoanh ${q.circled} (${esc(q.options[q.circled - 1])}) — câu này dễ nhầm, nhớ kỹ nhé.</div>`;
+  if (w?.ex) html += `<div class="example">${exBlock(w)}</div>`;
+  return html;
+}
+function renderExam(graded) {
+  $('examQs').innerHTML = exam.qs.map((q, i) => {
+    const opts = q.options.map((o, j) => {
+      let cls = 'm1-opt';
+      if (q.pick === j) cls += ' picked';
+      if (graded && o === q.answer) cls += ' correct';
+      else if (graded && q.pick === j) cls += ' wrong';
+      return `<button class="${cls}" data-q="${i}" data-o="${j}" ${graded ? 'disabled' : ''}><b>${j + 1}</b> ${esc(o)}</button>`;
+    }).join('');
+    return `<div class="m1-q">
+      <div class="m1-sent"><span class="m1-no">${i + 1}</span>${q.before}<u class="m1-target">${esc(q.target)}</u>${q.after}</div>
+      <div class="m1-opts">${opts}</div>
+      ${graded ? `<div class="m1-explain">${explainHtml(q)}</div>` : ''}</div>`;
+  }).join('');
+}
+$('examQs').addEventListener('click', e => {
+  const b = e.target.closest('.m1-opt');
+  if (!b || !exam || exam.graded) return;
+  exam.qs[b.dataset.q].pick = Number(b.dataset.o);
+  b.parentElement.querySelectorAll('.m1-opt').forEach(x => x.classList.toggle('picked', x === b));
+});
+$('examQuit').addEventListener('click', () => {
+  if (exam && !exam.graded && !confirm('Thoát bài đang làm? Kết quả sẽ không được lưu.')) return;
+  resetExam();
+});
+$('examSubmit').addEventListener('click', () => {
+  if (!exam || exam.graded) return;
+  const left = exam.qs.filter(q => q.pick === null).length;
+  if (left && !confirm(`Còn ${left} câu chưa làm. Vẫn nộp bài?`)) return;
+  clearInterval(exam.timer);
+  exam.graded = true;
+  const secs = Math.floor((Date.now() - exam.start) / 1000);
+  let score = 0;
+  const wrongQs = [];
+  exam.qs.forEach(q => {
+    const ok = q.pick !== null && q.options[q.pick] === q.answer;
+    if (ok) score++; else wrongQs.push(q);
+    if (q.w) recordAnswer(q.w, ok);
+  });
+  (state.examLog ||= []).push({ name: exam.name, date: todayStr(), n: exam.qs.length, score, secs });
+  state.examLog = state.examLog.slice(-15);
+  if (exam.bookTest) {
+    const best = (state.bookBest ||= {});
+    if (!best[exam.bookTest] || score > best[exam.bookTest].score) best[exam.bookTest] = { score, date: todayStr() };
+  }
+  save();
+  renderExam(true);
+  $('examSubmit').classList.add('hidden');
+  const pct = Math.round(score / exam.qs.length * 100);
+  $('examResult').innerHTML = `<div class="result-big">${score}/${exam.qs.length} (${pct}%)</div>
+    <p style="text-align:center">${esc(exam.name)} · Thời gian: ${fmtTime(secs)} · ${pct >= 90 ? 'Xuất sắc! 🎉' : pct >= 70 ? 'Khá tốt, cố thêm chút nữa! 💪' : 'Xem lại giải thích từng câu bên dưới nhé!'}</p>
+    <div class="actions">
+      ${wrongQs.length ? '<button class="btn bad" id="examRetry">Làm lại câu sai</button>' : ''}
+      <button class="btn primary" id="examNew">Chọn đề khác</button>
+    </div>`;
+  $('examResult').classList.remove('hidden');
+  $('examNew').addEventListener('click', resetExam);
+  if (wrongQs.length) $('examRetry').addEventListener('click', () =>
+    startExam(shuffle(wrongQs.map(q => ({ ...q, pick: null }))), 'Làm lại câu sai', null));
+  window.scrollTo(0, 0);
+});
 
 // ===== Danh sách =====
 $('listCat').innerHTML = '<option value="">Tất cả nhóm</option>' + CATS.map(c => `<option>${esc(c)}</option>`).join('');

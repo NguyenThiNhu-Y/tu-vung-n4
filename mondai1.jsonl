@@ -1,0 +1,140 @@
+{"page": 1, "test": "文字1 テスト1", "no": 1, "sentence": "いつから [旅行]して いるんですか。", "options": ["りょこ", "りょこう", "りょうこう", "りょうこ"], "circled": 4, "answer": 2, "mean": "du lịch"}
+{"page": 1, "test": "文字1 テスト1", "no": 2, "sentence": "あの [食堂]は いつも こんでいます。", "options": ["しゅくどう", "しゅくど", "しょくどう", "しょくど"], "circled": 3, "answer": 3}
+{"page": 1, "test": "文字1 テスト1", "no": 3, "sentence": "わたしの あには [体]が じょうぶです。", "options": ["からた", "かたら", "からだ", "かだら"], "circled": 3, "answer": 3}
+{"page": 1, "test": "文字1 テスト1", "no": 4, "sentence": "そんなに [急がないで] ください。", "options": ["およがないで", "いそがないで", "ぬがないで", "さわがないで"], "circled": 2, "answer": 2}
+{"page": 1, "test": "文字1 テスト1", "no": 5, "sentence": "きのうは とても [楽しかった]です。", "options": ["やさしかった", "うれしかった", "はずかしかった", "たのしかった"], "circled": 4, "answer": 4}
+{"page": 1, "test": "文字1 テスト1", "no": 6, "sentence": "[女性]が おおぜい はたらいて います。", "options": ["じょうせい", "じょせい", "しょうせい", "しょせい"], "circled": 2, "answer": 2}
+{"page": 1, "test": "文字1 テスト1", "no": 7, "sentence": "もう すっかり [冬]ですね。", "options": ["なつ", "あき", "ふゆ", "はる"], "circled": 3, "answer": 3}
+{"page": 2, "test": "文字1 テスト2", "no": 1, "sentence": "まいばん [予習]を しています。", "options": ["よしゅ", "ようしゅ", "ようしゅう", "よしゅう"], "circled": 4, "answer": 4}
+{"page": 2, "test": "文字1 テスト2", "no": 2, "sentence": "この 道を 行くと [近い]です。", "options": ["ちかい", "おそい", "とおい", "はやい"], "circled": 1, "answer": 1}
+{"page": 2, "test": "文字1 テスト2", "no": 3, "sentence": "どこで [習って] いたんですか。", "options": ["おこなって", "ならって", "かよって", "おそわって"], "circled": 2, "answer": 2, "mean": "học (習う)"}
+{"page": 2, "test": "文字1 テスト2", "no": 4, "sentence": "まどから きれいな [雲]が 見えます。", "options": ["ほし", "ゆき", "そら", "くも"], "circled": 4, "answer": 4}
+{"page": 2, "test": "文字1 テスト2", "no": 5, "sentence": "ここは [世界]で いちばん さむい ところです。", "options": ["せいがい", "せかい", "せいかい", "せがい"], "circled": 2, "answer": 2}
+{"page": 2, "test": "文字1 テスト2", "no": 6, "sentence": "わたしは [秋]が いちばん 好きです。", "options": ["はる", "なつ", "あき", "ふゆ"], "circled": 3, "answer": 3}
+{"page": 2, "test": "文字1 テスト2", "no": 7, "sentence": "この ケーキは [自分]で つくりました。", "options": ["じいぶん", "じぶん", "じいぷん", "じぷん"], "circled": 2, "answer": 2}
+{"page": 3, "test": "文字1 テスト3", "no": 1, "sentence": "まいばん [小説]を 読んでいます。", "options": ["しょせつ", "しょうせつ", "しょぜつ", "しょうぜつ"], "circled": 2, "answer": 2}
+{"page": 3, "test": "文字1 テスト3", "no": 2, "sentence": "[今度]の 月よう日に テストが あります。", "options": ["こんとう", "こんと", "こんどう", "こんど"], "circled": 4, "answer": 4, "mean": "lần tới, lần này"}
+{"page": 3, "test": "文字1 テスト3", "no": 3, "sentence": "時間が ぜんぜん [足りません]。", "options": ["あしりません", "ありません", "たしりません", "たりません"], "circled": 4, "answer": 4}
+{"page": 3, "test": "文字1 テスト3", "no": 4, "sentence": "やさい [売り場]は とても せまいです。", "options": ["せりば", "つりば", "かりば", "うりば"], "circled": 4, "answer": 4}
+{"page": 3, "test": "文字1 テスト3", "no": 5, "sentence": "いつも [空]を 見て います。", "options": ["つき", "そら", "ほし", "ゆめ"], "circled": 2, "answer": 2}
+{"page": 3, "test": "文字1 テスト3", "no": 6, "sentence": "こんどの りょこうを [楽しみ]に して います。", "options": ["ぎょうしみ", "がくしみ", "たのしみ", "らくしみ"], "circled": 3, "answer": 3}
+{"page": 3, "test": "文字1 テスト3", "no": 7, "sentence": "ぜったいに [遅れないで] ください。", "options": ["おくれないで", "わすれないで", "かれないで", "やぶれないで"], "circled": 1, "answer": 1}
+{"page": 4, "test": "文字1 テスト4", "no": 1, "sentence": "ここに [石]を 入れないで ください。", "options": ["いし", "すな", "えだ", "くさ"], "circled": 1, "answer": 1}
+{"page": 4, "test": "文字1 テスト4", "no": 2, "sentence": "かぜが 少し [弱く] なりました。", "options": ["あたたかく", "つめたく", "よわく", "つよく"], "circled": 3, "answer": 3}
+{"page": 4, "test": "文字1 テスト4", "no": 3, "sentence": "[特に] しつもんは ありません。", "options": ["さきに", "すぐに", "とくに", "べつに"], "circled": 3, "answer": 3}
+{"page": 4, "test": "文字1 テスト4", "no": 4, "sentence": "[会場]まで バスで 行きます。", "options": ["かいじょ", "かいじょう", "こうじょ", "こうじょう"], "circled": 2, "answer": 2}
+{"page": 4, "test": "文字1 テスト4", "no": 5, "sentence": "もう 少し [注意]して ください。", "options": ["ちゅうしゃ", "ちゅしゃ", "ちゅうい", "ちゅい"], "circled": 4, "answer": 3}
+{"page": 4, "test": "文字1 テスト4", "no": 6, "sentence": "かれには [負けたく] ないです。", "options": ["とどけたく", "うけたく", "かけたく", "まけたく"], "circled": null, "answer": 4}
+{"page": 4, "test": "文字1 テスト4", "no": 7, "sentence": "[道具]は かばんの 中に あります。", "options": ["みちく", "みちぐ", "どうく", "どうぐ"], "circled": null, "answer": 4}
+{"page": 5, "test": "文字1 テスト5", "no": 1, "sentence": "どこで [指]に けがを しましたか。", "options": ["はな", "ゆび", "うで", "かお"], "circled": 2, "answer": 2}
+{"page": 5, "test": "文字1 テスト5", "no": 2, "sentence": "いもうとの [日記]を 読みました。", "options": ["にちき", "にちきい", "にっき", "にっきい"], "circled": null, "answer": 3}
+{"page": 5, "test": "文字1 テスト5", "no": 3, "sentence": "それは いつ [決まった]んですか。", "options": ["あつまった", "きまった", "はじまった", "とまった"], "circled": 2, "answer": 2}
+{"page": 5, "test": "文字1 テスト5", "no": 4, "sentence": "田中さんが 来ないのは [残念]です。", "options": ["ざんねん", "ざねん", "さんねん", "さねん"], "circled": 1, "answer": 1}
+{"page": 5, "test": "文字1 テスト5", "no": 5, "sentence": "だれと いっしょに [通って] いるんですか。", "options": ["はしって", "ならって", "のこって", "かよって"], "circled": null, "answer": 4}
+{"page": 5, "test": "文字1 テスト5", "no": 6, "sentence": "[近所]に ゆうめいな こうえんが あります。", "options": ["ぎんじょ", "ぎんじょう", "きんじょ", "きんじょう"], "circled": 3, "answer": 3}
+{"page": 5, "test": "文字1 テスト5", "no": 7, "sentence": "あのころは いい [時代]でした。", "options": ["しだい", "じだい", "せだい", "ぜだい"], "circled": 2, "answer": 2}
+{"page": 6, "test": "文字1 テスト6", "no": 1, "sentence": "ここからは ゆっくり [進んで] ください。", "options": ["つつんで", "つづんで", "すすんで", "すずんで"], "circled": 3, "answer": 3}
+{"page": 6, "test": "文字1 テスト6", "no": 2, "sentence": "[空港]まで タクシーで 行きます。", "options": ["くうこう", "くうこ", "こうくう", "こうく"], "circled": 1, "answer": 1}
+{"page": 6, "test": "文字1 テスト6", "no": 3, "sentence": "あの店は [不便な] ところに あります。", "options": ["ぶべんな", "ふべんな", "ふへんな", "ぶへんな"], "circled": 2, "answer": 2}
+{"page": 6, "test": "文字1 テスト6", "no": 4, "sentence": "だんだん [難しく] なって きました。", "options": ["かなしく", "はずかしく", "むずかしく", "いそがしく"], "circled": 3, "answer": 3}
+{"page": 6, "test": "文字1 テスト6", "no": 5, "sentence": "この [写真]は だれが とりましたか。", "options": ["さしん", "しゃじん", "さじん", "しゃしん"], "circled": 4, "answer": 4}
+{"page": 6, "test": "文字1 テスト6", "no": 6, "sentence": "いつも わたしから [連絡]して います。", "options": ["れんなく", "れんらく", "れなく", "れらく"], "circled": 2, "answer": 2}
+{"page": 6, "test": "文字1 テスト6", "no": 7, "sentence": "この [お薬]は 少し にがいです。", "options": ["おくすり", "おやく", "おふとん", "おたく"], "circled": 1, "answer": 1}
+{"page": 7, "test": "文字1 テスト7", "no": 1, "sentence": "あのビルから [港]が 見えます。", "options": ["みずうみ", "みなと", "うみ", "いけ"], "circled": 2, "answer": 2}
+{"page": 7, "test": "文字1 テスト7", "no": 2, "sentence": "ねこの なまえを [考えて] ください。", "options": ["つたえて", "こたえて", "おしえて", "かんがえて"], "circled": 4, "answer": 4}
+{"page": 7, "test": "文字1 テスト7", "no": 3, "sentence": "彼女は [失礼な] 人です。", "options": ["しんぱいな", "しずかな", "しんせつな", "しつれいな"], "circled": 4, "answer": 4}
+{"page": 7, "test": "文字1 テスト7", "no": 4, "sentence": "あまり [無理]しないで くださいね。", "options": ["かじ", "るす", "むり", "えんりょ"], "circled": 3, "answer": 3}
+{"page": 7, "test": "文字1 テスト7", "no": 5, "sentence": "ドアを [閉めて] ください。", "options": ["ほめて", "とめて", "しめて", "きめて"], "circled": 3, "answer": 3}
+{"page": 7, "test": "文字1 テスト7", "no": 6, "sentence": "[上着]は その たなの 中に あります。", "options": ["したぎ", "うわぎ", "したき", "うわき"], "circled": 2, "answer": 2}
+{"page": 7, "test": "文字1 テスト7", "no": 7, "sentence": "きのうから [暑く] なりましたね。", "options": ["あつく", "さむく", "つよく", "よわく"], "circled": 1, "answer": 1}
+{"page": 8, "test": "文字1 テスト8", "no": 1, "sentence": "こちらが 新しい [住所]です。", "options": ["じゅうしょ", "じゅうじょ", "じゅうしょう", "じゅじょ"], "circled": 1, "answer": 1}
+{"page": 8, "test": "文字1 テスト8", "no": 2, "sentence": "[営業]時間は 9時から 18時までです。", "options": ["えいきょう", "えいぎょう", "じゅぎょう", "じゅきょう"], "circled": 2, "answer": 2, "mean": "kinh doanh, buôn bán (営業時間: giờ mở cửa)"}
+{"page": 8, "test": "文字1 テスト8", "no": 3, "sentence": "ここで 少しだけ [待って]いて ください。", "options": ["もって", "まって", "もどって", "すわって"], "circled": 2, "answer": 2}
+{"page": 8, "test": "文字1 テスト8", "no": 4, "sentence": "あれは だれの [地図]ですか。", "options": ["ちと", "ちど", "ちす", "ちず"], "circled": 4, "answer": 4, "mean": "bản đồ"}
+{"page": 8, "test": "文字1 テスト8", "no": 5, "sentence": "どこの パン[屋]へ 行きましょうか。", "options": ["おく", "いえ", "みせ", "や"], "circled": 4, "answer": 4, "mean": "tiệm, cửa hàng (パン屋: tiệm bánh mì)"}
+{"page": 8, "test": "文字1 テスト8", "no": 6, "sentence": "あねは [病院]で はたらいて います。", "options": ["びょおいん", "びょいん", "びょういん", "びよういん"], "circled": 3, "answer": 3}
+{"page": 8, "test": "文字1 テスト8", "no": 7, "sentence": "この [布団]は あたたかいです。", "options": ["ふとん", "ふうとん", "ふどん", "ふうどん"], "circled": 1, "answer": 1}
+{"page": 9, "test": "文字1 テスト9", "no": 1, "sentence": "へんな [味]が しますね。", "options": ["こえ", "おと", "におい", "あじ"], "circled": 4, "answer": 4}
+{"page": 9, "test": "文字1 テスト9", "no": 2, "sentence": "きのうより かぜが [強く] なりました。", "options": ["よわく", "つめたく", "つよく", "あたたかく"], "circled": 3, "answer": 3}
+{"page": 9, "test": "文字1 テスト9", "no": 3, "sentence": "あさから ずっと てんき[予報]を 見ています。", "options": ["ようぼう", "ようほう", "よほう", "よぼう"], "circled": 3, "answer": 3}
+{"page": 9, "test": "文字1 テスト9", "no": 4, "sentence": "らいしゅう [試合]が あります。", "options": ["しあい", "しけん", "しかい", "しごう"], "circled": 1, "answer": 1}
+{"page": 9, "test": "文字1 テスト9", "no": 5, "sentence": "なにか [意見]は ありませんか。", "options": ["いけん", "いげん", "けいけん", "けいげん"], "circled": 1, "answer": 1}
+{"page": 9, "test": "文字1 テスト9", "no": 6, "sentence": "こどもの [教育]は たいせつです。", "options": ["きょしつ", "きょうしつ", "きょいく", "きょういく"], "circled": 4, "answer": 4}
+{"page": 9, "test": "文字1 テスト9", "no": 7, "sentence": "駅まで むすめを [迎えに] 行きます。", "options": ["つかまえに", "とりかえに", "のりかえに", "むかえに"], "circled": 4, "answer": 4}
+{"page": 10, "test": "文字1 テスト10", "no": 1, "sentence": "この くつは [軽い]ですね。", "options": ["かるい", "おもい", "はやい", "おそい"], "circled": 1, "answer": 1}
+{"page": 10, "test": "文字1 テスト10", "no": 2, "sentence": "子どもたちが ねこの [世話]を しています。", "options": ["せいはなし", "せはなし", "せいわ", "せわ"], "circled": 4, "answer": 4}
+{"page": 10, "test": "文字1 テスト10", "no": 3, "sentence": "[特急]の 電車に のって ください。", "options": ["とくきゅ", "とくきゅう", "とっきゅう", "とっきゅ"], "circled": 3, "answer": 3}
+{"page": 10, "test": "文字1 テスト10", "no": 4, "sentence": "山田さんの [席]は どこですか。", "options": ["いえ", "うち", "せき", "いす"], "circled": 3, "answer": 3}
+{"page": 10, "test": "文字1 テスト10", "no": 5, "sentence": "あしたは [必ず] 来てください。", "options": ["かわらず", "かならず", "かたらず", "かまわず"], "circled": 2, "answer": 2}
+{"page": 10, "test": "文字1 テスト10", "no": 6, "sentence": "いつも としょかんを [利用]して います。", "options": ["りよう", "りよん", "いよう", "いよん"], "circled": 1, "answer": 1}
+{"page": 10, "test": "文字1 テスト10", "no": 7, "sentence": "ここで [切手]を 買いましょう。", "options": ["きいて", "きて", "きりて", "きって"], "circled": 4, "answer": 4}
+{"page": 11, "test": "文字1 テスト11", "no": 1, "sentence": "その とけいは [動いて] いますか。", "options": ["つづいて", "うごいて", "はたらいて", "かわいて"], "circled": 2, "answer": 2}
+{"page": 11, "test": "文字1 テスト11", "no": 2, "sentence": "きのう [顔]に けがを しました。", "options": ["うで", "はな", "ゆび", "かお"], "circled": 4, "answer": 4}
+{"page": 11, "test": "文字1 テスト11", "no": 3, "sentence": "ぜったいに [別れない]で ください。", "options": ["おくれない", "たおれない", "わかれない", "よごれない"], "circled": 3, "answer": 3}
+{"page": 11, "test": "文字1 テスト11", "no": 4, "sentence": "きょねん 小学校に [入学]しました。", "options": ["にょがく", "にょうがく", "にゅうがく", "にゅがく"], "circled": 3, "answer": 3}
+{"page": 11, "test": "文字1 テスト11", "no": 5, "sentence": "大きな [都市]に すんで います。", "options": ["とかい", "とこや", "とち", "とし"], "circled": null, "answer": 4}
+{"page": 11, "test": "文字1 テスト11", "no": 6, "sentence": "これから [図書館]へ 行きます。", "options": ["としょがん", "としょかん", "どしょがん", "どしょかん"], "circled": 1, "answer": 2, "mean": "thư viện"}
+{"page": 11, "test": "文字1 テスト11", "no": 7, "sentence": "きれいな [建物]が 見えますね。", "options": ["たてもの", "しなもの", "おくりもの", "きもの"], "circled": 1, "answer": 1}
+{"page": 12, "test": "文字1 テスト12", "no": 1, "sentence": "[食料品]は どこで 買いますか。", "options": ["しょくりょひん", "しょくりゅひん", "しょくりょうひん", "しょくりゅうひん"], "circled": 3, "answer": 3}
+{"page": 12, "test": "文字1 テスト12", "no": 2, "sentence": "わからないときは じしょを [引いて] ください。", "options": ["おいて", "あいて", "ひいて", "かいて"], "circled": 3, "answer": 3}
+{"page": 12, "test": "文字1 テスト12", "no": 3, "sentence": "この 電車は 4時に [出発]します。", "options": ["しゅっぱつ", "しゅっはつ", "しゅうぱつ", "しゅうはつ"], "circled": 1, "answer": 1}
+{"page": 12, "test": "文字1 テスト12", "no": 4, "sentence": "どこで [働いて] いますか。", "options": ["はたらいて", "うごいて", "いそいで", "さわいで"], "circled": 1, "answer": 1}
+{"page": 12, "test": "文字1 テスト12", "no": 5, "sentence": "[便利な] ものが たくさん ありますね。", "options": ["べんりな", "ふべんな", "ふくざつな", "あんぜんな"], "circled": 1, "answer": 1}
+{"page": 12, "test": "文字1 テスト12", "no": 6, "sentence": "きのう ともだちと 旅行を [計画]しました。", "options": ["けがく", "けいがく", "けかく", "けいかく"], "circled": 4, "answer": 4}
+{"page": 12, "test": "文字1 テスト12", "no": 7, "sentence": "[細かい] お金を もって いますか。", "options": ["ほそかい", "ほそいかい", "こまかい", "こまいかい"], "circled": 3, "answer": 3}
+{"page": 13, "test": "文字1 テスト13", "no": 1, "sentence": "まいにち 8時間[以上] ねて います。", "options": ["いか", "いがい", "いない", "いじょう"], "circled": null, "answer": 4}
+{"page": 13, "test": "文字1 テスト13", "no": 2, "sentence": "それは 山田さんが [答えて] くれました。", "options": ["かぞえて", "つたえて", "かんがえて", "こたえて"], "circled": null, "answer": 4}
+{"page": 13, "test": "文字1 テスト13", "no": 3, "sentence": "この [表]を 見てください。", "options": ["ひかり", "てん", "ひょう", "せん"], "circled": null, "answer": 3}
+{"page": 13, "test": "文字1 テスト13", "no": 4, "sentence": "彼は [家事]が とくいです。", "options": ["いえじ", "かじ", "いえごと", "かごと"], "circled": null, "answer": 2}
+{"page": 13, "test": "文字1 テスト13", "no": 5, "sentence": "[安全]な ところへ 行って ください。", "options": ["あんぜん", "かんぜん", "あんしん", "かんしん"], "circled": null, "answer": 1}
+{"page": 13, "test": "文字1 テスト13", "no": 6, "sentence": "リンさんは 去年 大学を [卒業]しました。", "options": ["そつぎょ", "そつぎょう", "りゅうがく", "りょうがく"], "circled": null, "answer": 2, "mean": "tốt nghiệp"}
+{"page": 13, "test": "文字1 テスト13", "no": 7, "sentence": "彼は ずっと [研究]を しています。", "options": ["けんぶつ", "けんきゅう", "げんぶつ", "げんきゅう"], "circled": null, "answer": 2}
+{"page": 14, "test": "文字1 テスト14", "no": 1, "sentence": "このへんは [草]が 多いですね。", "options": ["えだ", "くさ", "いし", "すな"], "circled": null, "answer": 2}
+{"page": 14, "test": "文字1 テスト14", "no": 2, "sentence": "[最後]に 来たのは 田中さんです。", "options": ["さいご", "さいしょ", "せいご", "せいしょ"], "circled": null, "answer": 1}
+{"page": 14, "test": "文字1 テスト14", "no": 3, "sentence": "[夕方]から さむく なります。", "options": ["ゆがた", "ゆほう", "ゆうがた", "ゆうほう"], "circled": null, "answer": 3, "mean": "chiều tối"}
+{"page": 14, "test": "文字1 テスト14", "no": 4, "sentence": "きれいな [景色]を 見に 行きます。", "options": ["けいしき", "けしき", "けいしょく", "けしょく"], "circled": null, "answer": 2}
+{"page": 14, "test": "文字1 テスト14", "no": 5, "sentence": "この店には いろいろな [品物]が あります。", "options": ["ひんぶつ", "しなぶつ", "ひんもの", "しなもの"], "circled": null, "answer": 4}
+{"page": 14, "test": "文字1 テスト14", "no": 6, "sentence": "きのうは とても [恥ずかしかった]です。", "options": ["しずかしかった", "むずかしかった", "はずかしかった", "すずかしかった"], "circled": null, "answer": 3}
+{"page": 14, "test": "文字1 テスト14", "no": 7, "sentence": "好きな ものを [選んで] ください。", "options": ["えらんで", "よろこんで", "はこんで", "たのんで"], "circled": null, "answer": 1}
+{"page": 15, "test": "文字1 テスト15", "no": 1, "sentence": "それは すこし [遠い]ですね。", "options": ["とおい", "かるい", "ちかい", "おもい"], "circled": null, "answer": 1}
+{"page": 15, "test": "文字1 テスト15", "no": 2, "sentence": "いつか [都会]に 住みたいです。", "options": ["まち", "とかい", "いなか", "とし"], "circled": null, "answer": 2}
+{"page": 15, "test": "文字1 テスト15", "no": 3, "sentence": "[駅員]に 聞いて みます。", "options": ["しゃいん", "しゃにん", "えきにん", "えきいん"], "circled": null, "answer": 4, "mean": "nhân viên nhà ga"}
+{"page": 15, "test": "文字1 テスト15", "no": 4, "sentence": "ここを [折って] ください。", "options": ["おって", "とって", "きって", "もって"], "circled": null, "answer": 1}
+{"page": 15, "test": "文字1 テスト15", "no": 5, "sentence": "この国の [文化]が 好きです。", "options": ["むんか", "もんか", "ぶんか", "ぼんか"], "circled": null, "answer": 3}
+{"page": 15, "test": "文字1 テスト15", "no": 6, "sentence": "大学で [法律]を べんきょうしました。", "options": ["ほりつ", "ほうりつ", "ぽりつ", "ぽうりつ"], "circled": null, "answer": 2}
+{"page": 15, "test": "文字1 テスト15", "no": 7, "sentence": "今日は [星]が きれいですね。", "options": ["ゆき", "つき", "そら", "ほし"], "circled": null, "answer": 4}
+{"page": 16, "test": "文字1 テスト16", "no": 1, "sentence": "しょうらいは [医者]に なりたいです。", "options": ["いいしゃ", "いいじゃ", "いしゃ", "いじゃ"], "circled": null, "answer": 3}
+{"page": 16, "test": "文字1 テスト16", "no": 2, "sentence": "あの道は すこし [怖い]ですね。", "options": ["とおい", "ちかい", "あぶない", "こわい"], "circled": null, "answer": 4}
+{"page": 16, "test": "文字1 テスト16", "no": 3, "sentence": "[店員]が おおぜい います。", "options": ["ていいん", "てんいん", "ていん", "てえいん"], "circled": null, "answer": 2}
+{"page": 16, "test": "文字1 テスト16", "no": 4, "sentence": "[必要]な ものだけ 買って ください。", "options": ["ひつよう", "ひっよう", "しつよう", "しっよう"], "circled": null, "answer": 1}
+{"page": 16, "test": "文字1 テスト16", "no": 5, "sentence": "ここに [植えて] ください。", "options": ["つたえて", "むかえて", "かえて", "うえて"], "circled": null, "answer": 4}
+{"page": 16, "test": "文字1 テスト16", "no": 6, "sentence": "どちらが [勝ちました]か。", "options": ["おちました", "たちました", "かちました", "もちました"], "circled": null, "answer": 3}
+{"page": 16, "test": "文字1 テスト16", "no": 7, "sentence": "いつも [心配]して います。", "options": ["しんはい", "しんぱい", "しっはい", "しっぱい"], "circled": null, "answer": 2}
+{"page": 17, "test": "文字1 テスト17", "no": 1, "sentence": "ここから [工場]が 見えます。", "options": ["こうじょう", "こうば", "くうじょう", "くうば"], "circled": null, "answer": 1}
+{"page": 17, "test": "文字1 テスト17", "no": 2, "sentence": "いろいろな ことを [経験]を しました。", "options": ["けいげん", "けいけん", "けげん", "けいげん"], "circled": null, "answer": 2}
+{"page": 17, "test": "文字1 テスト17", "no": 3, "sentence": "今すぐ [連れて] 来て ください。", "options": ["おくれて", "たおれて", "ゆれて", "つれて"], "circled": null, "answer": 4}
+{"page": 17, "test": "文字1 テスト17", "no": 4, "sentence": "あたらしい [服]を 買いました。", "options": ["たな", "かがみ", "ふく", "たたみ"], "circled": null, "answer": 3}
+{"page": 17, "test": "文字1 テスト17", "no": 5, "sentence": "明日の 夜に [着きます]。", "options": ["つきます", "あきます", "さきます", "すきます"], "circled": null, "answer": 1}
+{"page": 17, "test": "文字1 テスト17", "no": 6, "sentence": "この テーブルは すこし [汚い]です。", "options": ["おもい", "きたない", "おおきい", "たかい"], "circled": null, "answer": 2}
+{"page": 17, "test": "文字1 テスト17", "no": 7, "sentence": "何を [参考]に しましたか。", "options": ["さんご", "さんごう", "さんこ", "さんこう"], "circled": null, "answer": 4}
+{"page": 18, "test": "文字1 テスト18", "no": 1, "sentence": "今日は 何も [用事]が ありません。", "options": ["ようごと", "ようじ", "よごと", "よじ"], "circled": null, "answer": 2}
+{"page": 18, "test": "文字1 テスト18", "no": 2, "sentence": "この にもつを [運んで] ください。", "options": ["たのんで", "すすんで", "つつんで", "はこんで"], "circled": null, "answer": 4}
+{"page": 18, "test": "文字1 テスト18", "no": 3, "sentence": "[失敗]しても いいですよ。", "options": ["しっぱい", "しっはい", "しつぱい", "しつはい"], "circled": null, "answer": 1}
+{"page": 18, "test": "文字1 テスト18", "no": 4, "sentence": "これは どこに [飾ります]か。", "options": ["とまります", "まわります", "かざります", "もどります"], "circled": null, "answer": 3}
+{"page": 18, "test": "文字1 テスト18", "no": 5, "sentence": "その[場合]は 電話して ください。", "options": ["つあい", "つごう", "ばあい", "ばごう"], "circled": null, "answer": 3}
+{"page": 18, "test": "文字1 テスト18", "no": 6, "sentence": "いつから [借りて] いたんですか。", "options": ["こりて", "かりて", "たりて", "おりて"], "circled": null, "answer": 2}
+{"page": 18, "test": "文字1 テスト18", "no": 7, "sentence": "山田さん、この [意味]が わかりますか。", "options": ["いみ", "いし", "いがく", "いけん"], "circled": null, "answer": 1}
+{"page": 19, "test": "文字1 テスト19", "no": 1, "sentence": "あしたは 早く [起こして] ください。", "options": ["おこして", "のこして", "だっこして", "ひっこして"], "circled": null, "answer": 1}
+{"page": 19, "test": "文字1 テスト19", "no": 2, "sentence": "わたしたちが 少し [手伝い]ましょうか。", "options": ["てつだい", "でつたい", "てあらい", "であらい"], "circled": null, "answer": 1}
+{"page": 19, "test": "文字1 テスト19", "no": 3, "sentence": "あなたの 国の [習慣]を 教えて ください。", "options": ["しゅくがん", "しゅうがん", "しゅくかん", "しゅうかん"], "circled": null, "answer": 4}
+{"page": 19, "test": "文字1 テスト19", "no": 4, "sentence": "この 店の 人は みんな [親切]です。", "options": ["しんぱい", "しんせつ", "じんぱい", "じんせつ"], "circled": null, "answer": 2}
+{"page": 19, "test": "文字1 テスト19", "no": 5, "sentence": "きょう [届けなくても] いいですよ。", "options": ["かたづけなくても", "みつけなくても", "とどけなくても", "あずけなくても"], "circled": null, "answer": 3}
+{"page": 19, "test": "文字1 テスト19", "no": 6, "sentence": "かばんの 中に [枝]が 入って いました。", "options": ["すな", "いし", "えだ", "くさ"], "circled": null, "answer": 3, "mean": "cành cây"}
+{"page": 19, "test": "文字1 テスト19", "no": 7, "sentence": "きのうの よる、ここで [事故]が ありました。", "options": ["じこ", "ねつ", "かじ", "あじ"], "circled": null, "answer": 1}
+{"page": 20, "test": "文字1 テスト20", "no": 1, "sentence": "あとで もういちど [説明]します。", "options": ["やくそく", "そうだん", "れんしゅう", "せつめい"], "circled": null, "answer": 4}
+{"page": 20, "test": "文字1 テスト20", "no": 2, "sentence": "まいばん [運動]して います。", "options": ["うんてん", "うんとう", "うんでん", "うんどう"], "circled": null, "answer": 4}
+{"page": 20, "test": "文字1 テスト20", "no": 3, "sentence": "[最初]の ページを 読んで ください。", "options": ["さいご", "さいしょ", "せいご", "せいしょ"], "circled": null, "answer": 2}
+{"page": 20, "test": "文字1 テスト20", "no": 4, "sentence": "きょねんの [夏]、日本を りょこうしました。", "options": ["なつ", "あき", "ふゆ", "はる"], "circled": null, "answer": 1, "mean": "mùa hè"}
+{"page": 20, "test": "文字1 テスト20", "no": 5, "sentence": "田中さんは まいあさ [走って] いるんですか。", "options": ["かざって", "おどって", "いのって", "はしって"], "circled": null, "answer": 4}
+{"page": 20, "test": "文字1 テスト20", "no": 6, "sentence": "山田さんの となりが [空いて] います。", "options": ["くういて", "あいて", "そらいて", "からいて"], "circled": null, "answer": 2}
+{"page": 20, "test": "文字1 テスト20", "no": 7, "sentence": "そんなに たくさん [歩かないで] ください。", "options": ["うごかないで", "あかないで", "あるかないで", "かわかないで"], "circled": null, "answer": 3}
