@@ -776,12 +776,12 @@ function bookQuestion(q, mondai) {
   }
   if (mondai === 6) {
     const parts = q.sentence.split('（　）');
-    return { mondai, w: null, mean: q.mean, note: q.note, parts: parts.map(p => nl2br(esc(p))), answer,
+    return { mondai, xp: q.xp, w: null, mean: q.mean, note: q.note, parts: parts.map(p => nl2br(esc(p))), answer,
       options: q.options.slice(), pick: null, circled: q.circled };
   }
   if (mondai === 3) {
     const [before, after] = q.sentence.split('（　）');
-    return { mondai, w: findVocabKana(answer), mean: q.mean, note: q.note, before: esc(before), target: '', after: esc(after ?? ''),
+    return { mondai, xp: q.xp, w: findVocabKana(answer), mean: q.mean, note: q.note, before: esc(before), target: '', after: esc(after ?? ''),
       answer, options: q.options.slice(), pick: null, circled: q.circled };
   }
   const m = q.sentence.match(/^(.*)\[(.*?)\](.*)$/);
@@ -789,7 +789,7 @@ function bookQuestion(q, mondai) {
     const parts = diffParts(q.options);
     const target = m[2].trim();
     const w = /[\u4e00-\u9fff]/.test(target) ? findVocab(target) : findVocabKana(target.split(' ')[0]);
-    return { mondai, w, mean: q.mean, note: q.note, before: esc(m[1]), target: m[2], after: esc(m[3]), answer,
+    return { mondai, xp: q.xp, w, mean: q.mean, note: q.note, before: esc(m[1]), target: m[2], after: esc(m[3]), answer,
       options: q.options.slice(), pick: null, circled: q.circled,
       optHtml: parts.map(p => `${esc(p.head)}<b class="diff">${esc(p.mid)}</b>${esc(p.tail)}`),
       answerMid: parts[q.answer - 1].mid };
@@ -906,6 +906,11 @@ function explainHtml(q) {
   if (hv) html += ` · <span class="hvs">${hv}</span>`;
   if (q.circled && q.options[q.circled - 1] !== q.answer)
     html += `<div class="muted">📌 Trên sách bạn từng khoanh ${q.circled} (${esc(q.options[q.circled - 1])}) — câu này dễ nhầm, nhớ kỹ nhé.</div>`;
+  if (q.xp) {
+    html += `<div class="xp"><div class="xp-vi">🇻🇳 ${nl2br(esc(q.xp.vi))}</div><div class="xp-why">💡 ${esc(q.xp.why)}</div>
+      <ul class="xp-opts">${q.xp.opts.map((o, j) => { const ok = q.options[j] === q.answer;
+        return `<li class="${ok ? 'ok' : 'bad'}${q.pick === j ? ' picked' : ''}"><b>${ok ? '✓' : '✗'} ${j + 1}.</b> ${esc(o.replace(/^[✓✗]\s*/, ''))}</li>`; }).join('')}</ul></div>`;
+  }
   if (q.note) html += `<div class="muted">⚠️ ${esc(q.note)}</div>`;
   if (w?.ex) html += `<div class="example">${exBlock(w)}</div>`;
   return html;
