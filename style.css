@@ -259,3 +259,5 @@ h4 { margin: 18px 0 8px; }
 }
 .mondai-tabs button.active { border: 2px solid var(--accent); color: var(--accent); background: var(--accent-soft); font-weight: 700; }
 .m1-opt.kanji { font-size: 20px; }
+.blank.filled { color: var(--good); }
+.mondai-tabs button { font-size: 14px; padding: 8px 4px; }

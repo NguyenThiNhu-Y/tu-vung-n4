@@ -42,7 +42,7 @@ for n in (1, 2, 3, 4, 5):
     for line in open(path, encoding='utf-8'):
         if line.strip():
             q = json.loads(line)
-            mondai[n].append({k: q[k] for k in ('test', 'no', 'sentence', 'options', 'answer', 'circled', 'mean') if k in q})
+            mondai[n].append({k: q[k] for k in ('test', 'no', 'sentence', 'options', 'answer', 'circled', 'mean', 'note') if k in q})
 missing = sorted({c for w in words for c in w['kanji'] if '一' <= c <= '鿿' and c not in hv})
 used = {c for w in words for c in w['kanji']} | {c for qs in mondai.values() for q in qs for c in q['sentence'] + ''.join(q['options'])}
 hv = {k: v for k, v in hv.items() if k in used}

@@ -542,10 +542,10 @@ $('quizNext').addEventListener('click', nextQuestion);
 
 // ===== Luyện đề: 問題1 漢字読み =====
 // Tách câu ví dụ thành phần trước / từ gạch chân / phần sau; chỉ dùng câu có chữ Hán trong [ ]
-function parseM1(w) {
+function parseBracket(w, needKanji) {
   if (!w.ex) return null;
   const m = w.ex.match(/^(.*)\[(.*?)\](.*)$/);
-  if (!m || !m[2].includes('{')) return null;
+  if (!m || (needKanji && !m[2].includes('{'))) return null;
   const segs = [];
   m[2].replace(/\{([^{}|]*)\|([^{}|]*)\}|([^{]+)/g, (_, k, r, plain) => {
     segs.push(k ? { text: k, read: r, kanji: true } : { text: plain, read: plain, kanji: false });
@@ -554,7 +554,7 @@ function parseM1(w) {
   return { before: m[1], after: m[3], segs,
     target: segs.map(s => s.text).join(''), answer: segs.map(s => s.read).join('') };
 }
-WORDS.forEach(w => { w.m1 = parseM1(w); });
+WORDS.forEach(w => { w.m1 = parseBracket(w, true); w.m3 = parseBracket(w, false); });
 
 // Tạo đáp án nhiễu kiểu JLPT: dấu゛゜, âm dài, っ, ゃゅょ, ん
 const VOICE = {}, HANDAKU = {};
@@ -593,7 +593,10 @@ function segVariants(segs) {
   return res;
 }
 const joinRead = segs => segs.map(s => s.read).join('');
-const posGroup = w => /^Động từ|^Cặp/.test(w.cat) ? 'v' : /^Tính từ/.test(w.cat) ? 'a' : /^Phó từ/.test(w.cat) ? 'adv' : 'n';
+// Từ loại (nhóm "Tâm trạng" trộn nhiều loại nên phân loại riêng)
+const MOOD_POS = { うれしい: 'a', たのしい: 'a', かなしい: 'a', さびしい: 'a', はずかしい: 'a', なつかしい: 'a',
+  うらやましい: 'a', こわい: 'a', おどろく: 'v', おこる: 'v', びっくり: 'adv', がっかり: 'adv' };
+const posGroup = w => MOOD_POS[w.kana] || (/^Động từ|^Cặp/.test(w.cat) ? 'v' : /^Tính từ/.test(w.cat) ? 'a' : /^Phó từ/.test(w.cat) ? 'adv' : 'n');
 const allKanji = m => m.segs.every(s => s.kanji);
 function makeM1(w) {
   const m = w.m1;
@@ -659,7 +662,54 @@ function makeM2(w) {
   return { answer: m.target, options: shuffle(opts) };
 }
 
-// ===== Đề trong sách (問題1, 問題2): câu dạng "...[gạch chân]..." =====
+// ===== Đề 問題3 文脈規定 tự tạo: che từ trong câu ví dụ, chọn từ hợp ngữ cảnh (đáp án bằng hiragana) =====
+function m3Tail(w) {
+  const segs = w.m3.segs, last = segs[segs.length - 1];
+  if (segs.some(s => s.kanji)) return last.kanji ? '' : last.text;
+  return posGroup(w) === 'v' || posGroup(w) === 'a' ? w.m3.answer.slice(-2) : '';
+}
+function makeM3(w) {
+  const m = w.m3, tail = m3Tail(w);
+  const opts = [m.answer];
+  const mainMean = x => x.mean.split(/[,;(]/)[0].trim();
+  const add = o => { if (!opts.includes(o.m3.answer) && opts.length < 4 && mainMean(o) !== mainMean(w)) opts.push(o.m3.answer); };
+  const base = WORDS.filter(o => o !== w && o.m3 && posGroup(o) === posGroup(w));
+  const sameTail = o => m3Tail(o) === tail;
+  // Ưu tiên từ khác chủ đề để tránh 2 đáp án cùng hợp nghĩa (かなしい/さびしい)
+  shuffle(base.filter(o => o.cat !== w.cat && sameTail(o))).forEach(add);
+  shuffle(base.filter(sameTail)).forEach(add);
+  shuffle(base.filter(o => Math.abs(o.m3.answer.length - m.answer.length) <= 2)).forEach(add);
+  shuffle(base).forEach(add);
+  return { answer: m.answer, options: shuffle(opts) };
+}
+// Tìm từ vựng theo cách đọc (đề 問題3 dùng hiragana, có thể đã chia: ひろった -> ひろう)
+// Chữ đứng sau gốc từ phải hợp với đuôi từ điển: さわらない -> さわる (ら), không phải さわぐ
+const VERB_NEXT = { う: 'わいうえおっ', く: 'かきくけこい', ぐ: 'がぎぐげごい', す: 'さしすせそ', つ: 'たちつてとっ',
+  ぬ: 'なにぬねのん', ぶ: 'ばびぶべぼん', む: 'まみむめもん', る: '' };
+function findVocabKana(ans) {
+  let best = null;
+  WORDS.forEach(w => {
+    const k = w.kana.replace('(する)', '').split('・')[0];
+    const pos = posGroup(w);
+    let len = 0;
+    if (ans === k) len = k.length + 1;
+    else if (w.kana.includes('(する)') && ans.startsWith(k) && /^[しすさせ]/.test(ans.slice(k.length))) len = k.length + 0.5;
+    else if (pos === 'v' && VERB_NEXT[k.slice(-1)] !== undefined) {
+      const stem = k.slice(0, -1), next = ans[stem.length];
+      // る: nhóm 2 (たべる, おきる) chia tự do; nhóm 1 (おる, はいる...) phải là ら/り/る/れ/ろ/っ
+      const ichidan = k.endsWith('る') && /[いきしちにひみりぎじびぴえけせてねへめれげぜでべぺ]$/.test(stem);
+      const allow = k.endsWith('る') && !ichidan ? 'らりるれろっ' : VERB_NEXT[k.slice(-1)];
+      if (stem && ans.startsWith(stem) && next && (allow === '' || allow.includes(next))) len = stem.length;
+    } else if (pos === 'a' && k.endsWith('い')) {
+      const stem = k.slice(0, -1);
+      if (stem && ans.startsWith(stem) && /^(く|かった|かっ|け|さ)/.test(ans.slice(stem.length))) len = stem.length;
+    }
+    if (len && (!best || len > best.len)) best = { w, len };
+  });
+  return best?.w || null;
+}
+
+// ===== Đề trong sách (問題1, 2, 3) =====
 const MONDAI_INFO = {
   1: { title: '問題1　漢字読み — Đọc chữ Hán',
        desc: 'Chọn cách viết <b>hiragana</b> đúng cho từ chữ Hán được gạch chân.',
@@ -667,6 +717,9 @@ const MONDAI_INFO = {
   2: { title: '問題2　表記 — Chọn chữ Hán',
        desc: 'Chọn cách viết <b>chữ Hán</b> đúng cho từ hiragana được gạch chân. Cẩn thận các chữ trông gần giống nhau!',
        instr: '問題2　＿＿＿の　ことばは　どう　かきますか。１・２・３・４から　いちばん　いい　ものを　ひとつ　えらんで　ください。' },
+  3: { title: '問題3　文脈規定 — Điền từ vào câu',
+       desc: 'Chọn từ thích hợp nhất để điền vào chỗ trống （　） — kiểm tra nghĩa và cách dùng từ.',
+       instr: '問題3　（　）に　なにを　いれますか。１・２・３・４から　いちばん　いい　ものを　ひとつ　えらんで　ください。' },
 };
 const BOOK_TESTS = [];
 Object.entries(typeof MONDAI === 'undefined' ? {} : MONDAI).forEach(([mondai, list]) => list.forEach(q => {
@@ -690,13 +743,23 @@ function findVocab(target) {
   return best?.w || null;
 }
 function bookQuestion(q, mondai) {
-  const m = q.sentence.match(/^(.*)\[(.*?)\](.*)$/);
   const answer = q.options[q.answer - 1];
+  if (mondai === 3) {
+    const [before, after] = q.sentence.split('（　）');
+    return { mondai, w: findVocabKana(answer), mean: q.mean, note: q.note, before: esc(before), target: '', after: esc(after ?? ''),
+      answer, options: q.options.slice(), pick: null, circled: q.circled };
+  }
+  const m = q.sentence.match(/^(.*)\[(.*?)\](.*)$/);
   const w = findVocab(mondai === 2 ? answer : m[2]);
   return { mondai, w, mean: q.mean, before: esc(m[1]), target: m[2], after: esc(m[3]), answer,
     options: q.options.slice(), pick: null, circled: q.circled };
 }
 function genQuestion(w, furi, mondai) {
+  if (mondai === 3) {
+    const g = makeM3(w);
+    return { mondai, w, before: sentPart(w.m3.before, furi), target: '', after: sentPart(w.m3.after, furi),
+      answer: g.answer, options: g.options, pick: null };
+  }
   const g = mondai === 2 ? makeM2(w) : makeM1(w);
   return { mondai, w, before: sentPart(w.m1.before, furi), target: mondai === 2 ? w.m1.answer : w.m1.target,
     after: sentPart(w.m1.after, furi), answer: g.answer, options: g.options, pick: null };
@@ -750,7 +813,7 @@ $('bookMixStart').addEventListener('click', () => {
     `問題${examMondai} · Tổng hợp đề sách`, null, examMondai);
 });
 $('examStart').addEventListener('click', () => {
-  const pool = quizPool($('examScope').value).filter(w => w.m1);
+  const pool = quizPool($('examScope').value).filter(w => examMondai === 3 ? w.m3 : w.m1);
   if (!pool.length) {
     $('examMsg').textContent = $('examScope').value === 'weak'
       ? 'Chưa có từ hay sai nào. Học thêm rồi quay lại nhé!'
@@ -781,7 +844,9 @@ function explainHtml(q) {
   const res = q.pick === null ? '⚪ Chưa làm.' : q.options[q.pick] === q.answer ? '✅ Đúng.' : '❌ Sai.';
   const w = q.w;
   const kanjiText = q.mondai === 2 ? q.answer : q.target;
-  let html = q.mondai === 2
+  let html = q.mondai === 3
+    ? `${res} Đáp án: <b class="jp">${esc(q.answer)}</b>${w && hasKanji(w) ? ` <span class="jp">(${esc(w.kanji)})</span>` : ''}`
+    : q.mondai === 2
     ? `${res} <b class="jp">${esc(q.target)}</b> viết là <b class="jp">${esc(q.answer)}</b>`
     : `${res} <b class="jp">${esc(q.target)}</b> đọc là <b class="jp">${esc(q.answer)}</b>`;
   const hv = w?.hv || [...kanjiText].filter(c => HANVIET[c]).map(c => HANVIET[c]).join(' ');
@@ -790,6 +855,7 @@ function explainHtml(q) {
   if (hv) html += ` · <span class="hvs">${hv}</span>`;
   if (q.circled && q.options[q.circled - 1] !== q.answer)
     html += `<div class="muted">📌 Trên sách bạn từng khoanh ${q.circled} (${esc(q.options[q.circled - 1])}) — câu này dễ nhầm, nhớ kỹ nhé.</div>`;
+  if (q.note) html += `<div class="muted">⚠️ ${esc(q.note)}</div>`;
   if (w?.ex) html += `<div class="example">${exBlock(w)}</div>`;
   return html;
 }
@@ -803,7 +869,9 @@ function renderExam(graded) {
       return `<button class="${cls}" data-q="${i}" data-o="${j}" ${graded ? 'disabled' : ''}><b>${j + 1}</b> ${esc(o)}</button>`;
     }).join('');
     return `<div class="m1-q">
-      <div class="m1-sent"><span class="m1-no">${i + 1}</span>${q.before}<u class="m1-target">${esc(q.target)}</u>${q.after}</div>
+      <div class="m1-sent"><span class="m1-no">${i + 1}</span>${q.before}${q.mondai === 3
+        ? (graded ? `<span class="blank filled">（${esc(q.answer)}）</span>` : '<span class="blank">（　　　）</span>')
+        : `<u class="m1-target">${esc(q.target)}</u>`}${q.after}</div>
       <div class="m1-opts">${opts}</div>
       ${graded ? `<div class="m1-explain">${explainHtml(q)}</div>` : ''}</div>`;
   }).join('');
