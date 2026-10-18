@@ -251,3 +251,11 @@ h4 { margin: 18px 0 8px; }
   .m1-opts { grid-template-columns: 1fr 1fr; }
   .m1-sent { font-size: 18px; }
 }
+
+.mondai-tabs { display: flex; gap: 6px; margin-bottom: 8px; }
+.mondai-tabs button {
+  flex: 1; font-family: var(--jp); font-size: 15px; padding: 10px; border-radius: 10px; cursor: pointer;
+  border: 1px solid var(--line); background: var(--panel); color: var(--muted);
+}
+.mondai-tabs button.active { border: 2px solid var(--accent); color: var(--accent); background: var(--accent-soft); font-weight: 700; }
+.m1-opt.kanji { font-size: 20px; }

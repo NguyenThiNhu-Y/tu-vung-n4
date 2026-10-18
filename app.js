@@ -630,40 +630,80 @@ function sentPart(str, furi) {
               : esc(str).replace(/\{([^{}|]*)\|[^{}|]*\}/g, '$1');
 }
 
-// Đề trong sách: câu dạng "...[gạch chân]..." -> câu hỏi
+// ===== Đề 問題2 表記 tự tạo: hiragana gạch chân -> chọn chữ Hán =====
+// Đáp án nhiễu: thay 1 chữ Hán bằng chữ đồng âm Hán Việt (工/公/功), hoặc từ khác cùng okurigana
+const HV_GROUPS = {};
+Object.entries(HANVIET).forEach(([k, v]) => (HV_GROUPS[v] ||= []).push(k));
+function makeM2(w) {
+  const m = w.m1;
+  const opts = [m.target];
+  const add = v => { if (v && !opts.includes(v) && opts.length < 4) opts.push(v); };
+  const swaps = [];
+  m.segs.forEach((s, j) => {
+    if (!s.kanji) return;
+    [...s.text].forEach((c, ci) => (HV_GROUPS[HANVIET[c]] || []).filter(x => x !== c).forEach(x => {
+      const text = [...s.text]; text[ci] = x;
+      swaps.push(m.segs.map((t, k) => k === j ? text.join('') : t.text).join(''));
+    }));
+  });
+  shuffle(swaps).forEach(add);
+  const tail = m.segs[m.segs.length - 1].kanji ? '' : m.segs[m.segs.length - 1].text;
+  const similar = o => o !== w && o.m1 && posGroup(o) === posGroup(w) &&
+    (tail ? o.m1.segs[o.m1.segs.length - 1].text === tail : allKanji(o.m1) && o.m1.target.length === m.target.length);
+  shuffle(WORDS.filter(similar)).forEach(o => add(o.m1.target));
+  // Thiếu thì lấy từ cùng loại có đuôi chia giống (〜ました, 〜て...)
+  const end = tail.slice(-2);
+  shuffle(WORDS.filter(o => o !== w && o.m1 && posGroup(o) === posGroup(w) &&
+    (end ? o.m1.target.endsWith(end) : allKanji(o.m1)))).forEach(o => add(o.m1.target));
+  shuffle(WORDS.filter(o => o !== w && o.m1 && posGroup(o) === posGroup(w))).forEach(o => add(o.m1.target));
+  return { answer: m.target, options: shuffle(opts) };
+}
+
+// ===== Đề trong sách (問題1, 問題2): câu dạng "...[gạch chân]..." =====
+const MONDAI_INFO = {
+  1: { title: '問題1　漢字読み — Đọc chữ Hán',
+       desc: 'Chọn cách viết <b>hiragana</b> đúng cho từ chữ Hán được gạch chân.',
+       instr: '問題1　＿＿＿の　ことばは　ひらがなで　どう　かきますか。１・２・３・４から　いちばん　いい　ものを　ひとつ　えらんで　ください。' },
+  2: { title: '問題2　表記 — Chọn chữ Hán',
+       desc: 'Chọn cách viết <b>chữ Hán</b> đúng cho từ hiragana được gạch chân. Cẩn thận các chữ trông gần giống nhau!',
+       instr: '問題2　＿＿＿の　ことばは　どう　かきますか。１・２・３・４から　いちばん　いい　ものを　ひとつ　えらんで　ください。' },
+};
 const BOOK_TESTS = [];
-(typeof MONDAI1 === 'undefined' ? [] : MONDAI1).forEach(q => {
+Object.entries(typeof MONDAI === 'undefined' ? {} : MONDAI).forEach(([mondai, list]) => list.forEach(q => {
   let t = BOOK_TESTS.find(x => x.test === q.test);
-  if (!t) BOOK_TESTS.push(t = { test: q.test, qs: [] });
+  if (!t) BOOK_TESTS.push(t = { mondai: Number(mondai), test: q.test, qs: [] });
   t.qs.push(q);
-});
-// Tìm từ vựng ứng với phần gạch chân (để giải thích nghĩa + đưa vào ôn tập)
+}));
+// Tìm từ vựng ứng với phần chữ Hán (để giải thích nghĩa + đưa vào ôn tập)
 function findVocab(target) {
   target = target.replace(/^[おご]/, '');
   let best = null;
   WORDS.forEach(w => {
-    const k = w.kanji.replace('(する)', '').replace('(お)', '');
+    const k = w.kanji.replace('(する)', '').replace('(お)', '').replace(/^[おご]/, '');
     if (!k || !hasKanji(w)) return;
-    const stem = k.replace(/[぀-ゟ]+$/, '');   // bỏ okurigana: 急ぐ -> 急
-    if (target.startsWith(k) || (stem && target.startsWith(stem) && stem.length >= 1 && /[一-鿿]/.test(stem))) {
-      if (!best || k.length > best.k.length) best = { w, k };
-    }
+    const stem = k.replace(/[\u3040-\u309f]+$/, '');   // bỏ okurigana: 急ぐ -> 急
+    // độ dài phần khớp: khớp cả từ ưu tiên hơn khớp gốc chữ Hán
+    const len = target.startsWith(k) ? k.length + 0.5
+      : stem && target.startsWith(stem) && /[\u4e00-\u9fff]/.test(stem) ? stem.length : 0;
+    if (len && (!best || len > best.len)) best = { w, len };
   });
   return best?.w || null;
 }
-function bookQuestion(q) {
+function bookQuestion(q, mondai) {
   const m = q.sentence.match(/^(.*)\[(.*?)\](.*)$/);
-  const w = findVocab(m[2]);
-  return { w, mean: q.mean, before: esc(m[1]), target: m[2], after: esc(m[3]), answer: q.options[q.answer - 1],
-    options: q.options.slice(), pick: null, circled: q.circled, label: `${q.test} · câu ${q.no}` };
+  const answer = q.options[q.answer - 1];
+  const w = findVocab(mondai === 2 ? answer : m[2]);
+  return { mondai, w, mean: q.mean, before: esc(m[1]), target: m[2], after: esc(m[3]), answer,
+    options: q.options.slice(), pick: null, circled: q.circled };
 }
-function genQuestion(w, furi) {
-  const g = makeM1(w);
-  return { w, before: sentPart(w.m1.before, furi), target: w.m1.target, after: sentPart(w.m1.after, furi),
-    answer: g.answer, options: g.options, pick: null, label: '' };
+function genQuestion(w, furi, mondai) {
+  const g = mondai === 2 ? makeM2(w) : makeM1(w);
+  return { mondai, w, before: sentPart(w.m1.before, furi), target: mondai === 2 ? w.m1.answer : w.m1.target,
+    after: sentPart(w.m1.after, furi), answer: g.answer, options: g.options, pick: null };
 }
 
 let exam = null;
+let examMondai = 1;
 function resetExam() {
   if (exam?.timer) clearInterval(exam.timer);
   exam = null;
@@ -672,14 +712,18 @@ function resetExam() {
   $('examResult').classList.add('hidden');
   $('examMsg').textContent = '';
   $('examFuri').checked = state.settings.examFuri !== false;
+  examMondai = state.settings.examMondai || 1;
+  document.querySelectorAll('.mondai-tabs button').forEach(b => b.classList.toggle('active', Number(b.dataset.m) === examMondai));
+  $('examTitle').textContent = MONDAI_INFO[examMondai].title;
+  $('examDesc').innerHTML = MONDAI_INFO[examMondai].desc + ' Làm hết rồi bấm <b>Nộp bài</b> để chấm. Câu sai sẽ tự đưa vào ôn tập.';
   const best = state.bookBest || {};
-  $('bookTests').innerHTML = BOOK_TESTS.length ? BOOK_TESTS.map((t, i) => {
+  const tests = BOOK_TESTS.filter(t => t.mondai === examMondai);
+  $('bookTests').innerHTML = tests.length ? tests.map(t => {
     const b = best[t.test];
     const cls = !b ? '' : b.score === t.qs.length ? ' done' : ' tried';
-    return `<button class="book-test${cls}" data-i="${i}"><b>${esc(t.test.replace('文字1 ', ''))}</b>
+    return `<button class="book-test${cls}" data-i="${BOOK_TESTS.indexOf(t)}"><b>${esc(t.test.replace(/^文字\d /, ''))}</b>
       <span>${b ? `Cao nhất ${b.score}/${t.qs.length}` : `${t.qs.length} câu`}</span></button>`;
-  }).join('') : '<p class="muted">Chưa có đề trong sách.</p>';
-  $('bookMixNum').max = BOOK_TESTS.reduce((n, t) => n + t.qs.length, 0);
+  }).join('') : '<p class="muted">Chưa có đề trong sách cho dạng này.</p>';
   const log = state.examLog || [];
   $('examHistory').innerHTML = log.length
     ? '<h3>Kết quả gần đây</h3>' + log.slice().reverse().map(r =>
@@ -687,17 +731,23 @@ function resetExam() {
     : '';
 }
 const fmtTime = s => `${pad(Math.floor(s / 60))}:${pad(s % 60)}`;
+document.querySelectorAll('.mondai-tabs button').forEach(b => b.addEventListener('click', () => {
+  state.settings.examMondai = Number(b.dataset.m);
+  save();
+  resetExam();
+}));
 $('bookTests').addEventListener('click', e => {
   const b = e.target.closest('.book-test');
   if (!b) return;
   const t = BOOK_TESTS[b.dataset.i];
-  startExam(t.qs.map(bookQuestion), t.test, t.test);
+  startExam(t.qs.map(q => bookQuestion(q, t.mondai)), t.test, t.test, t.mondai);
 });
 $('bookMixStart').addEventListener('click', () => {
-  const all = BOOK_TESTS.flatMap(t => t.qs);
+  const all = BOOK_TESTS.filter(t => t.mondai === examMondai).flatMap(t => t.qs);
   if (!all.length) return;
   const n = Math.min(Number($('bookMixNum').value) || 9, all.length);
-  startExam(shuffle(all.slice()).slice(0, n).map(bookQuestion), 'Tổng hợp đề sách', null);
+  startExam(shuffle(all.slice()).slice(0, n).map(q => bookQuestion(q, examMondai)),
+    `問題${examMondai} · Tổng hợp đề sách`, null, examMondai);
 });
 $('examStart').addEventListener('click', () => {
   const pool = quizPool($('examScope').value).filter(w => w.m1);
@@ -711,15 +761,17 @@ $('examStart').addEventListener('click', () => {
   save();
   const n = Math.min(Number($('examNum').value), pool.length);
   const furi = state.settings.examFuri !== false;
-  startExam(shuffle(pool.slice()).slice(0, n).map(w => genQuestion(w, furi)), 'Đề tự tạo', null);
+  startExam(shuffle(pool.slice()).slice(0, n).map(w => genQuestion(w, furi, examMondai)),
+    `問題${examMondai} · Đề tự tạo`, null, examMondai);
 });
-function startExam(qs, name, bookTest) {
-  exam = { qs, name, bookTest, start: Date.now() };
+function startExam(qs, name, bookTest, mondai) {
+  exam = { qs, name, bookTest, mondai, start: Date.now() };
   $('examSetup').classList.add('hidden');
   $('examResult').classList.add('hidden');
   $('examPaper').classList.remove('hidden');
   $('examSubmit').classList.remove('hidden');
   $('examName').textContent = name;
+  $('examInstr').textContent = MONDAI_INFO[mondai].instr;
   renderExam(false);
   $('examTimer').textContent = '00:00';
   exam.timer = setInterval(() => { $('examTimer').textContent = fmtTime(Math.floor((Date.now() - exam.start) / 1000)); }, 1000);
@@ -728,8 +780,11 @@ function startExam(qs, name, bookTest) {
 function explainHtml(q) {
   const res = q.pick === null ? '⚪ Chưa làm.' : q.options[q.pick] === q.answer ? '✅ Đúng.' : '❌ Sai.';
   const w = q.w;
-  let html = `${res} <b class="jp">${esc(q.target)}</b> đọc là <b class="jp">${esc(q.answer)}</b>`;
-  const hv = w?.hv || [...q.target].filter(c => HANVIET[c]).map(c => HANVIET[c]).join(' ');
+  const kanjiText = q.mondai === 2 ? q.answer : q.target;
+  let html = q.mondai === 2
+    ? `${res} <b class="jp">${esc(q.target)}</b> viết là <b class="jp">${esc(q.answer)}</b>`
+    : `${res} <b class="jp">${esc(q.target)}</b> đọc là <b class="jp">${esc(q.answer)}</b>`;
+  const hv = w?.hv || [...kanjiText].filter(c => HANVIET[c]).map(c => HANVIET[c]).join(' ');
   const mean = w?.mean || q.mean;
   if (mean) html += ` — ${esc(mean)}`;
   if (hv) html += ` · <span class="hvs">${hv}</span>`;
@@ -741,7 +796,7 @@ function explainHtml(q) {
 function renderExam(graded) {
   $('examQs').innerHTML = exam.qs.map((q, i) => {
     const opts = q.options.map((o, j) => {
-      let cls = 'm1-opt';
+      let cls = 'm1-opt' + (q.mondai === 2 ? ' kanji' : '');
       if (q.pick === j) cls += ' picked';
       if (graded && o === q.answer) cls += ' correct';
       else if (graded && q.pick === j) cls += ' wrong';
@@ -796,7 +851,7 @@ $('examSubmit').addEventListener('click', () => {
   $('examResult').classList.remove('hidden');
   $('examNew').addEventListener('click', resetExam);
   if (wrongQs.length) $('examRetry').addEventListener('click', () =>
-    startExam(shuffle(wrongQs.map(q => ({ ...q, pick: null }))), 'Làm lại câu sai', null));
+    startExam(shuffle(wrongQs.map(q => ({ ...q, pick: null }))), 'Làm lại câu sai', null, exam.mondai));
   window.scrollTo(0, 0);
 });
 

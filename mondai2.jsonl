@@ -1,0 +1,100 @@
+{"page": 21, "test": "文字2 テスト1", "no": 1, "sentence": "[むすこ]は ともだちと テニスを しています。", "options": ["息子", "思子", "忘子", "急子"], "circled": 1, "answer": 1}
+{"page": 21, "test": "文字2 テスト1", "no": 2, "sentence": "この コーヒーは すこし [にがい]です。", "options": ["花い", "若い", "苦い", "苫い"], "circled": 3, "answer": 3}
+{"page": 21, "test": "文字2 テスト1", "no": 3, "sentence": "山田[かちょう]は ただいま がいしゅつ中です。", "options": ["課長", "画長", "科長", "家長"], "circled": 1, "answer": 1}
+{"page": 21, "test": "文字2 テスト1", "no": 4, "sentence": "この ちかくで [かじ]が あったので にげて ください。", "options": ["家事", "火事", "家時", "火時"], "circled": 1, "answer": 2}
+{"page": 21, "test": "文字2 テスト1", "no": 5, "sentence": "はやく きょうしつに [もどって] ください。", "options": ["房って", "局って", "戻って", "扉って"], "circled": 3, "answer": 3}
+{"page": 22, "test": "文字2 テスト2", "no": 1, "sentence": "[ただしい] こたえを おしえて ください。", "options": ["土しい", "正しい", "止しい", "上しい"], "circled": 2, "answer": 2}
+{"page": 22, "test": "文字2 テスト2", "no": 2, "sentence": "田中さんは [とくべつ]な 人です。", "options": ["侍別", "待別", "持別", "特別"], "circled": 4, "answer": 4}
+{"page": 22, "test": "文字2 テスト2", "no": 3, "sentence": "それを 聞いて [あんしん]しました。", "options": ["案必", "案心", "安必", "安心"], "circled": 4, "answer": 4}
+{"page": 22, "test": "文字2 テスト2", "no": 4, "sentence": "田中さんとは どんな [かんけい]ですか。", "options": ["閉係", "開係", "関係", "間係"], "circled": 3, "answer": 3}
+{"page": 22, "test": "文字2 テスト2", "no": 5, "sentence": "とうきょうと [くらべて] おきなわは あたたかいです。", "options": ["比べて", "暗べて", "倉べて", "位べて"], "circled": 1, "answer": 1}
+{"page": 23, "test": "文字2 テスト3", "no": 1, "sentence": "母は まいあさ 早く [おきます]。", "options": ["起ます", "置ます", "起きます", "置きます"], "circled": 3, "answer": 3}
+{"page": 23, "test": "文字2 テスト3", "no": 2, "sentence": "学校から [きょうかい]が 見えます。", "options": ["京会", "教会", "京合", "教合"], "circled": 2, "answer": 2}
+{"page": 23, "test": "文字2 テスト3", "no": 3, "sentence": "こしょうの [げんいん]は まだ わかりません。", "options": ["元員", "元因", "原員", "原因"], "circled": 3, "answer": 4}
+{"page": 23, "test": "文字2 テスト3", "no": 4, "sentence": "なつやすみに 川へ [およぎに] 行きました。", "options": ["注ぎに", "泳ぎに", "海ぎに", "港ぎに"], "circled": 2, "answer": 2}
+{"page": 23, "test": "文字2 テスト3", "no": 5, "sentence": "[さいきん] 買った ものは 何ですか。", "options": ["最近", "才近", "最金", "才金"], "circled": 1, "answer": 1}
+{"page": 24, "test": "文字2 テスト4", "no": 1, "sentence": "[かかり]の 人を よんで ください。", "options": ["貝", "員", "糸", "係"], "circled": 4, "answer": 4}
+{"page": 24, "test": "文字2 テスト4", "no": 2, "sentence": "山田さんは [くろい] シャツを 着ている 人です。", "options": ["赤い", "黒い", "白い", "青い"], "circled": 2, "answer": 2, "mean": "đen"}
+{"page": 24, "test": "文字2 テスト4", "no": 3, "sentence": "あしたの かいぎに [しゅっせき]しますか。", "options": ["出席", "出関", "出場", "出発"], "circled": null, "answer": 1}
+{"page": 24, "test": "文字2 テスト4", "no": 4, "sentence": "[おしょうがつ]に 国へ 帰りました。", "options": ["お正月", "お小月", "お正日", "お小日"], "circled": null, "answer": 1}
+{"page": 24, "test": "文字2 テスト4", "no": 5, "sentence": "むすめは ことし 大学を [そつぎょう]します。", "options": ["率行", "卒行", "率業", "卒業"], "circled": null, "answer": 4, "mean": "tốt nghiệp"}
+{"page": 25, "test": "文字2 テスト5", "no": 1, "sentence": "きのう 田中さんと [やくそく]しました。", "options": ["約東", "約束", "役東", "役束"], "circled": null, "answer": 2}
+{"page": 25, "test": "文字2 テスト5", "no": 2, "sentence": "山田さん [いがい]で だれか いませんか。", "options": ["以内", "意内", "以外", "意外"], "circled": null, "answer": 3}
+{"page": 25, "test": "文字2 テスト5", "no": 3, "sentence": "せんしゅう えきで さいふを [おとしました]。", "options": ["洛としました", "落としました", "荘としました", "茫としました"], "circled": null, "answer": 2}
+{"page": 25, "test": "文字2 テスト5", "no": 4, "sentence": "どんな [かたち]の ぼうしが ほしいですか。", "options": ["刑", "研", "型", "形"], "circled": null, "answer": 4}
+{"page": 25, "test": "文字2 テスト5", "no": 5, "sentence": "ごごから きゅうに 天気が [かわりました]ね。", "options": ["変わりました", "代わりました", "火わりました", "課わりました"], "circled": null, "answer": 1}
+{"page": 26, "test": "文字2 テスト6", "no": 1, "sentence": "からだの [ぐあい]は どうですか。", "options": ["貝合", "具合", "貝会", "具会"], "circled": null, "answer": 2}
+{"page": 26, "test": "文字2 テスト6", "no": 2, "sentence": "山田[しゃちょう]は きのう 会社に 来ませんでした。", "options": ["舎長", "者長", "社長", "車長"], "circled": null, "answer": 3}
+{"page": 26, "test": "文字2 テスト6", "no": 3, "sentence": "かのじょに じぶんの きもちを [つたえたい]です。", "options": ["云えたい", "会えたい", "伝えたい", "転えたい"], "circled": null, "answer": 3}
+{"page": 26, "test": "文字2 テスト6", "no": 4, "sentence": "[たいふう]が 来るので 外に 出ないで ください。", "options": ["台風", "大風", "台雨", "大雨"], "circled": null, "answer": 1}
+{"page": 26, "test": "文字2 テスト6", "no": 5, "sentence": "それは [かなしい] ニュースですね。", "options": ["恋しい", "楽しい", "親しい", "悲しい"], "circled": null, "answer": 4}
+{"page": 27, "test": "文字2 テスト7", "no": 1, "sentence": "きのうから [せなか]が いたいです。", "options": ["世中", "背中", "世仲", "背仲"], "circled": null, "answer": 2}
+{"page": 27, "test": "文字2 テスト7", "no": 2, "sentence": "ケーキは まだ [のこって] いますか。", "options": ["残って", "形って", "列って", "浅って"], "circled": null, "answer": 1}
+{"page": 27, "test": "文字2 テスト7", "no": 3, "sentence": "日曜日に ともだちと [はなみ]を しました。", "options": ["花味", "花美", "花実", "花見"], "circled": null, "answer": 4}
+{"page": 27, "test": "文字2 テスト7", "no": 4, "sentence": "田中さんは 中国語と スペイン語の [りょうほう]が じょうずです。", "options": ["両法", "良法", "両方", "良方"], "circled": null, "answer": 3}
+{"page": 27, "test": "文字2 テスト7", "no": 5, "sentence": "父とは えいごで [かいわ]します。", "options": ["開話", "開語", "会話", "会語"], "circled": 3, "answer": 3}
+{"page": 28, "test": "文字2 テスト8", "no": 1, "sentence": "うんどうかいは どこで [おこないます]か。", "options": ["往います", "代います", "行います", "伺います"], "circled": null, "answer": 3}
+{"page": 28, "test": "文字2 テスト8", "no": 2, "sentence": "たんじょうびの [おいわい]に 時計を もらいました。", "options": ["お況い", "お祝い", "お悦い", "お説い"], "circled": null, "answer": 2}
+{"page": 28, "test": "文字2 テスト8", "no": 3, "sentence": "どれくらいの [わりあい]で まぜたら いいですか。", "options": ["列合", "利合", "別合", "割合"], "circled": null, "answer": 4}
+{"page": 28, "test": "文字2 テスト8", "no": 4, "sentence": "[ひるま]に 1時間くらい ねました。", "options": ["昼間", "昼問", "尽間", "尽問"], "circled": null, "answer": 1}
+{"page": 28, "test": "文字2 テスト8", "no": 5, "sentence": "田中さんは まだ [にゅういん]して いますか。", "options": ["人完", "入完", "人院", "入院"], "circled": null, "answer": 4}
+{"page": 29, "test": "文字2 テスト9", "no": 1, "sentence": "あちらに いるのが 山田さんの [ごしゅじん]です。", "options": ["ご主人", "ご住人", "ご駐人", "ご柱人"], "circled": null, "answer": 1}
+{"page": 29, "test": "文字2 テスト9", "no": 2, "sentence": "この [さか]は あぶないので 気を つけて ください。", "options": ["湖", "坂", "島", "林"], "circled": null, "answer": 2}
+{"page": 29, "test": "文字2 テスト9", "no": 3, "sentence": "ごみが どんどん [ふえて] います。", "options": ["増えて", "変えて", "伝えて", "植えて"], "circled": null, "answer": 1}
+{"page": 29, "test": "文字2 テスト9", "no": 4, "sentence": "わたしの 学校には いろいろな [きそく]が あります。", "options": ["規足", "気足", "規則", "気則"], "circled": null, "answer": 3}
+{"page": 29, "test": "文字2 テスト9", "no": 5, "sentence": "山田さんが とうきょうを [あんない]して くれました。", "options": ["案肉", "案内", "安肉", "安内"], "circled": null, "answer": 2}
+{"page": 30, "test": "文字2 テスト10", "no": 1, "sentence": "その国の [ぎじゅつ]は すばらしいです。", "options": ["扱術", "枝術", "抜術", "技術"], "circled": null, "answer": 4}
+{"page": 30, "test": "文字2 テスト10", "no": 2, "sentence": "この[しゃかい]には いろいろな もんだいが あります。", "options": ["杜会", "杜界", "社会", "社界"], "circled": null, "answer": 3}
+{"page": 30, "test": "文字2 テスト10", "no": 3, "sentence": "田中さんは [しろい] かばんを もって います。", "options": ["赤い", "黒い", "白い", "青い"], "circled": null, "answer": 3, "mean": "trắng"}
+{"page": 30, "test": "文字2 テスト10", "no": 4, "sentence": "きのう 山田さんに 本を [かしました]。", "options": ["科しました", "課しました", "借しました", "貸しました"], "circled": null, "answer": 4}
+{"page": 30, "test": "文字2 テスト10", "no": 5, "sentence": "あぶないですから [うんてん] しないで ください。", "options": ["運転", "運動", "連転", "連動"], "circled": null, "answer": 1}
+{"page": 31, "test": "文字2 テスト11", "no": 1, "sentence": "いえの ドアが こわれて [ひらきません]。", "options": ["明きません", "開きません", "空きません", "飽きません"], "circled": null, "answer": 2}
+{"page": 31, "test": "文字2 テスト11", "no": 2, "sentence": "いもうとの けっこんには [はんたい]です。", "options": ["反体", "半体", "反対", "半対"], "circled": null, "answer": 3}
+{"page": 31, "test": "文字2 テスト11", "no": 3, "sentence": "その [あかい] ぼうしは 田中さんの ですか。", "options": ["白い", "黒い", "赤い", "青い"], "circled": null, "answer": 3}
+{"page": 31, "test": "文字2 テスト11", "no": 4, "sentence": "わたしの 会社は [だんせい]が 少ないです。", "options": ["男性", "男生", "男姓", "男牲"], "circled": null, "answer": 1}
+{"page": 31, "test": "文字2 テスト11", "no": 5, "sentence": "つぎの 電車は [きゅうこう]です。", "options": ["急行", "休行", "急校", "休校"], "circled": null, "answer": 1}
+{"page": 32, "test": "文字2 テスト12", "no": 1, "sentence": "けさの [くうき]は すこし つめたかったです。", "options": ["室気", "空気", "室木", "空木"], "circled": null, "answer": 2}
+{"page": 32, "test": "文字2 テスト12", "no": 2, "sentence": "テストを しますから 本を [とじて] ください。", "options": ["開けて", "閉じて", "間じて", "問じて"], "circled": null, "answer": 2}
+{"page": 32, "test": "文字2 テスト12", "no": 3, "sentence": "この へやは いつも [くらい]です。", "options": ["白い", "黒い", "明い", "暗い"], "circled": null, "answer": 4}
+{"page": 32, "test": "文字2 テスト12", "no": 4, "sentence": "学校の ちかくに [ほんや]が あります。", "options": ["本室", "本場", "本屋", "本家"], "circled": null, "answer": 3}
+{"page": 32, "test": "文字2 テスト12", "no": 5, "sentence": "日本の [せいかつ]には もう なれましたか。", "options": ["生活", "生月", "正活", "正月"], "circled": null, "answer": 1}
+{"page": 33, "test": "文字2 テスト13", "no": 1, "sentence": "父が ばんごはんを [つくって] います。", "options": ["作って", "使って", "仕って", "化って"], "circled": null, "answer": 1, "mean": "làm, chế tạo (作る)"}
+{"page": 33, "test": "文字2 テスト13", "no": 2, "sentence": "こどもの 時 [すいえい]を ならって いました。", "options": ["氷海", "氷泳", "水海", "水泳"], "circled": null, "answer": 4}
+{"page": 33, "test": "文字2 テスト13", "no": 3, "sentence": "あとで 先生に [しらせて] ください。", "options": ["調らせて", "記らせて", "短らせて", "知らせて"], "circled": null, "answer": 4}
+{"page": 33, "test": "文字2 テスト13", "no": 4, "sentence": "[だいじな] ものは かばんの 中に 入れて ください。", "options": ["大事な", "大字な", "大時な", "大地な"], "circled": null, "answer": 1}
+{"page": 33, "test": "文字2 テスト13", "no": 5, "sentence": "[ぶちょう]は いつも 車で 会社に 来ます。", "options": ["社長", "係長", "部長", "課長"], "circled": null, "answer": 3}
+{"page": 34, "test": "文字2 テスト14", "no": 1, "sentence": "きのうの [ほうそう]を 見ましたか。", "options": ["放走", "放送", "方走", "方送"], "circled": null, "answer": 2}
+{"page": 34, "test": "文字2 テスト14", "no": 2, "sentence": "みんなで いっしょに [おどり]ましょう。", "options": ["動り", "泳り", "踊り", "驚り"], "circled": null, "answer": 3}
+{"page": 34, "test": "文字2 テスト14", "no": 3, "sentence": "[かがく]の じゅぎょうが 好きです。", "options": ["医学", "数学", "語学", "科学"], "circled": null, "answer": 4}
+{"page": 34, "test": "文字2 テスト14", "no": 4, "sentence": "きのうの かんじ テストは [かんたん]でした。", "options": ["間単", "簡単", "感単", "漢単"], "circled": null, "answer": 2}
+{"page": 34, "test": "文字2 テスト14", "no": 5, "sentence": "山田さんの [かみ]は 長いです。", "options": ["毛", "上", "紙", "髪"], "circled": null, "answer": 4}
+{"page": 35, "test": "文字2 テスト15", "no": 1, "sentence": "田中さんは [あおい] めがねを かけて います。", "options": ["赤い", "青い", "黒い", "白い"], "circled": null, "answer": 2, "mean": "xanh (da trời)"}
+{"page": 35, "test": "文字2 テスト15", "no": 2, "sentence": "まいあさ 学校まで [あるいて] 行きます。", "options": ["歩いて", "走いて", "止いて", "少いて"], "circled": null, "answer": 1}
+{"page": 35, "test": "文字2 テスト15", "no": 3, "sentence": "この 町は [こうつう]量が 多いので 気を つけましょう。", "options": ["交道", "交通", "公道", "公通"], "circled": null, "answer": 2}
+{"page": 35, "test": "文字2 テスト15", "no": 4, "sentence": "きのうから ずっと [ゆき]が 降って います。", "options": ["電", "雷", "雲", "雪"], "circled": null, "answer": 4}
+{"page": 35, "test": "文字2 テスト15", "no": 5, "sentence": "家で [すうがく]の しゅくだいを して います。", "options": ["教楽", "教学", "数楽", "数学"], "circled": null, "answer": 4}
+{"page": 36, "test": "文字2 テスト16", "no": 1, "sentence": "こんど いっしょに [しょくじ]に 行きましょう。", "options": ["飯事", "食事", "飯時", "食時"], "circled": null, "answer": 2}
+{"page": 36, "test": "文字2 テスト16", "no": 2, "sentence": "車の かぎを [さがして] います。", "options": ["技して", "払して", "探して", "打して"], "circled": null, "answer": 3}
+{"page": 36, "test": "文字2 テスト16", "no": 3, "sentence": "ともだちと 氷の 上を [すべりました]。", "options": ["洗りました", "泳りました", "滑りました", "活りました"], "circled": null, "answer": 3}
+{"page": 36, "test": "文字2 テスト16", "no": 4, "sentence": "ふゆは [すいどう]の 水が つめたいです。", "options": ["水道", "水筒", "水同", "水動"], "circled": null, "answer": 1}
+{"page": 36, "test": "文字2 テスト16", "no": 5, "sentence": "山田さんの [むすめ]さんは 小学生です。", "options": ["姉", "娘", "嫁", "妹"], "circled": null, "answer": 2}
+{"page": 37, "test": "文字2 テスト17", "no": 1, "sentence": "こうえんに [むし]が たくさん いました。", "options": ["草", "馬", "羽", "虫"], "circled": null, "answer": 4}
+{"page": 37, "test": "文字2 テスト17", "no": 2, "sentence": "あたらしい [てぶくろ]が ほしいです。", "options": ["毛袋", "毛衣", "手袋", "手衣"], "circled": null, "answer": 3}
+{"page": 37, "test": "文字2 テスト17", "no": 3, "sentence": "みんなで 町を [けんぶつ]します。", "options": ["見牡", "見性", "見物", "見牧"], "circled": null, "answer": 3}
+{"page": 37, "test": "文字2 テスト17", "no": 4, "sentence": "まだ しゅくだいが [おわって] いません。", "options": ["紙わって", "終わって", "組わって", "続わって"], "circled": null, "answer": 2}
+{"page": 37, "test": "文字2 テスト17", "no": 5, "sentence": "としょかんで [しらべて] います。", "options": ["試べて", "通べて", "調べて", "週べて"], "circled": null, "answer": 3}
+{"page": 38, "test": "文字2 テスト18", "no": 1, "sentence": "明日の [しけん]の べんきょうを して います。", "options": ["試見", "実見", "試験", "実験"], "circled": 3, "answer": 3}
+{"page": 38, "test": "文字2 テスト18", "no": 2, "sentence": "まいあさ 公園を [はしって] います。", "options": ["走って", "歩って", "渡って", "通って"], "circled": 1, "answer": 1}
+{"page": 38, "test": "文字2 テスト18", "no": 3, "sentence": "左の ボタンを [おして] ください。", "options": ["押して", "埋して", "岬して", "里して"], "circled": null, "answer": 1, "mean": "ấn, đẩy (押す)"}
+{"page": 38, "test": "文字2 テスト18", "no": 4, "sentence": "かいぎの [ばしょ]は どこですか。", "options": ["場所", "楊所", "場炉", "楊炉"], "circled": 1, "answer": 1}
+{"page": 38, "test": "文字2 テスト18", "no": 5, "sentence": "大学で [けいざい]学を 学びたいです。", "options": ["軽財", "軽済", "経財", "経済"], "circled": null, "answer": 4}
+{"page": 39, "test": "文字2 テスト19", "no": 1, "sentence": "この にもつは どこに [おくります]か。", "options": ["近ります", "送ります", "迭ります", "辺ります"], "circled": null, "answer": 2}
+{"page": 39, "test": "文字2 テスト19", "no": 2, "sentence": "[やさい]は まいにち 食べたほうが いいですよ。", "options": ["屋採", "野採", "屋菜", "野菜"], "circled": null, "answer": 4}
+{"page": 39, "test": "文字2 テスト19", "no": 3, "sentence": "これからは [じゆう]に 生きて ください。", "options": ["自田", "目田", "自由", "目由"], "circled": null, "answer": 3}
+{"page": 39, "test": "文字2 テスト19", "no": 4, "sentence": "[ふね]に のって りょこうしたいです。", "options": ["船", "般", "航", "舷"], "circled": null, "answer": 1, "mean": "tàu, thuyền"}
+{"page": 39, "test": "文字2 テスト19", "no": 5, "sentence": "こうえんで ごみを [ひろいました]。", "options": ["指いました", "括いました", "拾いました", "捨いました"], "circled": null, "answer": 3}
+{"page": 40, "test": "文字2 テスト20", "no": 1, "sentence": "山田さんは きょねん いえを [たてました]。", "options": ["建てました", "健てました", "延てました", "廷てました"], "circled": null, "answer": 1}
+{"page": 40, "test": "文字2 テスト20", "no": 2, "sentence": "あしたまでに [へんじ]を して ください。", "options": ["辺事", "返事", "変事", "恋事"], "circled": null, "answer": 2}
+{"page": 40, "test": "文字2 テスト20", "no": 3, "sentence": "かいぎちゅうに 電話が [なりました]。", "options": ["鳴りました", "成りました", "生りました", "泣りました"], "circled": null, "answer": 1}
+{"page": 40, "test": "文字2 テスト20", "no": 4, "sentence": "[れきし]を 学ぶことは たいせつです。", "options": ["歴士", "暦士", "歴史", "暦史"], "circled": null, "answer": 3}
+{"page": 40, "test": "文字2 テスト20", "no": 5, "sentence": "みちに ごみを [すてない]で ください。", "options": ["招てない", "担てない", "拾てない", "捨てない"], "circled": null, "answer": 4}
