@@ -143,6 +143,14 @@ mark rt { color: var(--accent); }
 .speak {
   position: absolute; top: 6px; right: 8px; border: 0; background: none; font-size: 22px; cursor: pointer;
 }
+.nav-row { display: flex; justify-content: space-between; gap: 8px; margin-top: 10px; }
+.nav-row .btn { flex: 1; font-weight: 500; padding: 10px; }
+.review-banner {
+  background: var(--accent-soft); color: var(--accent); border-radius: 10px;
+  padding: 8px 12px; font-size: 14px; margin-bottom: 8px;
+}
+.chip small { color: var(--muted); font-size: 11px; }
+#quizQ .jp-kana { font-size: 20px; font-weight: 400; margin-top: 4px; }
 .actions { display: flex; gap: 8px; margin-top: 12px; }
 .actions .btn { flex: 1; padding: 14px; }
 

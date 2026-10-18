@@ -245,37 +245,88 @@ function startReview() {
   startSession(ws, 'review', 'Ôn tập');
 }
 function startSession(words, mode, title) {
-  session = { queue: words.slice(), total: words.length, done: 0, failed: new Set(), mode, title };
+  session = { queue: words.slice(), total: words.length, done: 0, failed: new Set(), mode, title,
+    history: [], view: null };
   showView('study');
   showCard();
 }
-function showCard() {
-  const w = session.queue[0];
-  if (!w) return finishSession();
-  session.flipped = false;
-  $('studyTitle').textContent = session.title;
-  $('studyCount').textContent = `${session.done}/${session.total} · còn ${session.queue.length} thẻ`;
-  $('studyBar').style.width = (session.done / session.total * 100) + '%';
+// Cách hiển thị mặt trước: 'kana' = hiragana to + chữ Hán nhỏ, 'kanaOnly', 'kanji'
+const frontMode = () => state.settings.front || 'kana';
+const kanaFirst = () => frontMode() !== 'kanji';
+function wordLabel(w) {
+  if (!hasKanji(w)) return esc(w.kana);
+  return kanaFirst() ? `${esc(w.kana)} (${esc(w.kanji)})` : `${esc(w.kanji)} (${esc(w.kana)})`;
+}
+function fillCard(w) {
+  session.shown = w;
   $('cardCat').textContent = w.cat + (w.note === 'を' ? ' · tha động từ' : w.note === 'が' ? ' · tự động từ' : '');
-  const showKanji = hasKanji(w);
-  $('cardWord').textContent = showKanji ? w.kanji : w.kana;
-  $('cardKanaFront').textContent = showKanji && state.settings.furigana ? w.kana : '';
-  $('cardKana').textContent = showKanji ? w.kana : '';
+  const k = hasKanji(w), mode = frontMode();
+  let main = w.kana, sub = '', back = '';
+  if (k && mode === 'kanji') { main = w.kanji; back = w.kana; }
+  else if (k && mode === 'kana') sub = w.kanji;
+  else if (k) back = w.kanji;
+  $('cardWord').textContent = main;
+  $('cardKanaFront').textContent = sub;
+  $('cardKana').textContent = back;
   $('cardMean').textContent = w.mean;
   $('cardHV').textContent = w.hv ? 'Hán Việt: ' + w.hv : '';
   $('cardEx').innerHTML = exBlock(w);
   $('cardNote').innerHTML = noteHtml(w);
   $('cardRelated').innerHTML = relatedHtml(w);
   $('cardRelated').classList.toggle('hidden', !$('cardRelated').innerHTML);
+}
+function updateStudyHead() {
+  $('studyTitle').textContent = session.title;
+  $('studyCount').textContent = `${session.done}/${session.total} · còn ${session.queue.length} thẻ`;
+  $('studyBar').style.width = (session.done / session.total * 100) + '%';
+  $('prevBtn').disabled = session.view === 0 || !session.history.length;
+  $('nextBtn').textContent = session.view === null ? 'Bỏ qua ▶' : 'Sau ▶';
+  $('nextBtn').disabled = session.view === null && session.queue.length < 2;
+  $('reviewBanner').classList.toggle('hidden', session.view === null);
+}
+function showCard() {
+  const w = session.queue[0];
+  if (!w) return finishSession();
+  session.view = null;
+  session.flipped = false;
+  fillCard(w);
   $('cardBack').classList.add('hidden');
   $('flipActions').classList.remove('hidden');
   $('gradeActions').classList.add('hidden');
+  updateStudyHead();
+}
+// Xem lại thẻ đã học (chỉ xem, không chấm lại)
+function showHistoryCard() {
+  fillCard(session.history[session.view]);
+  $('cardBack').classList.remove('hidden');
+  $('flipActions').classList.add('hidden');
+  $('gradeActions').classList.add('hidden');
+  updateStudyHead();
+}
+function prevCard() {
+  if (!session || !session.history.length) return;
+  if (session.view === null) session.view = session.history.length - 1;
+  else if (session.view > 0) session.view--;
+  else return;
+  showHistoryCard();
+}
+function nextCard() {
+  if (!session) return;
+  if (session.view !== null) {
+    session.view++;
+    if (session.view >= session.history.length) return showCard();
+    return showHistoryCard();
+  }
+  if (session.queue.length < 2) return;
+  session.queue.push(session.queue.shift()); // bỏ qua: đưa thẻ xuống cuối
+  toast('Đã bỏ qua — thẻ này sẽ quay lại cuối lượt');
+  showCard();
 }
 function noteHtml(w) {
   if (w.partner) {
     const kind = w.note === 'を' ? 'Tha động từ: 〜<b>を</b> ' + w.kana : 'Tự động từ: 〜<b>が</b> ' + w.kana;
     const p = w.partner;
-    return `${kind}<br>Cặp với: <span class="chip">${esc(p.kanji || p.kana)} (${esc(p.kana)}) <i>${esc(p.mean)}</i></span>`;
+    return `${kind}<br>Cặp với: <span class="chip">${wordLabel(p)} <i>${esc(p.mean)}</i></span>`;
   }
   if (w.cat === 'Katakana' && w.note) return 'Từ gốc: ' + esc(w.note);
   return '';
@@ -286,12 +337,12 @@ function relatedHtml(w) {
     const others = (KANJI_INDEX[c] || []).filter(o => o !== w).slice(0, 6);
     if (!others.length) return;
     out.push(`<div class="grp"><span class="k">${c}</span><b>${HANVIET[c]}</b>: ` +
-      others.map(o => `<span class="chip">${esc(o.kanji)} <i>${esc(o.mean.split(/[,;(]/)[0])}</i></span>`).join('') + '</div>');
+      others.map(o => `<span class="chip">${esc(o.kanji)} <small>${esc(o.kana)}</small> <i>${esc(o.mean.split(/[,;(]/)[0])}</i></span>`).join('') + '</div>');
   });
   return out.join('');
 }
 function flip() {
-  if (!session || session.flipped) return;
+  if (!session || session.view !== null || session.flipped) return;
   session.flipped = true;
   $('cardBack').classList.remove('hidden');
   $('flipActions').classList.add('hidden');
@@ -299,7 +350,7 @@ function flip() {
   if (state.settings.autoSpeak) speak(session.queue[0]);
 }
 function grade(ok) {
-  if (!session || !session.flipped) return;
+  if (!session || session.view !== null || !session.flipped) return;
   const w = session.queue.shift();
   const c = ensureCard(w);
   if (ok) {
@@ -314,6 +365,7 @@ function grade(ok) {
     session.failed.add(w.id);
     session.queue.splice(Math.min(4, session.queue.length), 0, w); // gặp lại sau ~4 thẻ
   }
+  session.history.push(w);
   save();
   showCard();
 }
@@ -327,7 +379,9 @@ $('flipBtn').addEventListener('click', flip);
 $('card').addEventListener('click', e => { if (!e.target.closest('button')) flip(); });
 $('againBtn').addEventListener('click', () => grade(false));
 $('goodBtn').addEventListener('click', () => grade(true));
-$('speakBtn').addEventListener('click', () => session && speak(session.queue[0]));
+$('prevBtn').addEventListener('click', prevCard);
+$('nextBtn').addEventListener('click', nextCard);
+$('speakBtn').addEventListener('click', () => session && speak(session.shown));
 
 // ===== Quiz =====
 let quiz = null;
@@ -379,9 +433,10 @@ function makeQuestion(w, type) {
     write: `Chữ Hán đúng của từ này là gì? (nghĩa: ${w.mean})`,
     fill: 'Chọn từ thích hợp điền vào chỗ trống',
   }[type];
-  const q = { mean: hasKanji(w) ? w.kanji : w.kana, read: w.kanji, write: w.kana, fill: '' }[type];
+  const q = { mean: hasKanji(w) && !kanaFirst() ? w.kanji : w.kana, read: w.kanji, write: w.kana, fill: '' }[type];
+  const sub = type === 'mean' && hasKanji(w) && frontMode() === 'kana' ? w.kanji : '';
   const order = shuffle(opts.map((_, i) => i));
-  return { w, type, ask, q, answer: get(w), options: order.map(i => opts[i]), optWords: order.map(i => optWords[i]) };
+  return { w, type, ask, q, sub, answer: get(w), options: order.map(i => opts[i]), optWords: order.map(i => optWords[i]) };
 }
 $('quizStart').addEventListener('click', () => {
   const pool = quizPool($('quizScope').value);
@@ -413,7 +468,7 @@ function showQuestion() {
   $('quizBar').style.width = (quiz.i / quiz.qs.length * 100) + '%';
   $('quizAsk').textContent = q.ask;
   if (q.type === 'fill') $('quizQ').innerHTML = exHtml(q.w.ex, true);
-  else $('quizQ').textContent = q.q;
+  else $('quizQ').innerHTML = esc(q.q) + (q.sub ? `<div class="jp-kana">${esc(q.sub)}</div>` : '');
   $('quizQ').classList.toggle('jp-sent', q.type === 'fill');
   const box = $('quizChoices');
   box.innerHTML = '';
@@ -421,8 +476,10 @@ function showQuestion() {
     const b = document.createElement('button');
     b.className = 'choice' + (q.type === 'mean' ? '' : ' jp');
     const ow = q.optWords[idx];
-    b.innerHTML = `${idx + 1}. ${esc(opt)}` +
-      (q.type === 'fill' && hasKanji(ow) ? ` <small class="opt-kana">${esc(ow.kana)}</small>` : '');
+    b.innerHTML = q.type === 'fill' && hasKanji(ow)
+      ? (kanaFirst() ? `${idx + 1}. ${esc(ow.kana)} <small class="opt-kana">${esc(opt)}</small>`
+                     : `${idx + 1}. ${esc(opt)} <small class="opt-kana">${esc(ow.kana)}</small>`)
+      : `${idx + 1}. ${esc(opt)}`;
     b.addEventListener('click', () => answer(idx));
     box.appendChild(b);
   });
@@ -447,7 +504,7 @@ function answer(idx) {
   }
   save();
   const w = q.w;
-  $('quizExplain').innerHTML = `${ok ? '✅ Chính xác!' : '❌ Sai rồi.'} <span class="jp"><b>${esc(w.kanji || w.kana)}</b>${w.kanji ? ' (' + esc(w.kana) + ')' : ''}</span>
+  $('quizExplain').innerHTML = `${ok ? '✅ Chính xác!' : '❌ Sai rồi.'} <span class="jp"><b>${wordLabel(w)}</b></span>
     — ${esc(w.mean)}${w.hv ? ` · <span style="color:var(--accent)">${w.hv}</span>` : ''}
     ${w.ex ? '<div class="example">' + exBlock(w) + '</div>' : ''}`;
   $('quizExplain').classList.remove('hidden');
@@ -464,7 +521,7 @@ function nextQuestion() {
   done.innerHTML = `<div class="result-big">${quiz.score}/${quiz.qs.length} (${pct}%)</div>
     <p style="text-align:center">${pct >= 90 ? 'Xuất sắc! 🎉' : pct >= 70 ? 'Khá tốt, cố thêm chút nữa! 💪' : 'Không sao, ôn lại các từ sai rồi làm lại nhé!'}</p>
     ${quiz.wrong.length ? '<h3>Các từ làm sai</h3><div class="wrong-list">' + quiz.wrong.map(w =>
-      `<div><b style="font-family:var(--jp)">${esc(w.kanji || w.kana)}</b> ${w.kanji ? '(' + esc(w.kana) + ')' : ''} — ${esc(w.mean)}</div>`).join('') + '</div>' : ''}
+      `<div><b style="font-family:var(--jp)">${wordLabel(w)}</b> — ${esc(w.mean)}</div>`).join('') + '</div>' : ''}
     <div class="actions">
       ${quiz.wrong.length ? '<button class="btn bad" id="retryWrong">Làm lại câu sai</button>' : ''}
       <button class="btn primary" id="quizAgain">Quiz mới</button>
@@ -498,7 +555,8 @@ function renderList() {
   let html = '', lastCat = '';
   rows.forEach(w => {
     if (w.cat !== lastCat) { html += `<tr class="cat"><td colspan="4">${esc(w.cat)}</td></tr>`; lastCat = w.cat; }
-    const jp = hasKanji(w) ? `${esc(w.kanji)}<small>${esc(w.kana)}</small>` : esc(w.kana);
+    const jp = !hasKanji(w) ? esc(w.kana)
+      : kanaFirst() ? `${esc(w.kana)}<small>${esc(w.kanji)}</small>` : `${esc(w.kanji)}<small>${esc(w.kana)}</small>`;
     html += `<tr><td class="jp">${jp}</td>
       <td>${esc(w.mean)}${w.hv ? `<br><span class="hvs">${w.hv}</span>` : ''}${w.cat === 'Katakana' && w.note ? `<br><span class="muted">${esc(w.note)}</span>` : ''}
         ${w.ex ? `<div class="example small">${exBlock(w)}</div>` : ''}</td>
@@ -516,13 +574,13 @@ $('listBody').addEventListener('click', e => {
 function renderSettings() {
   $('setStart').value = state.settings.start;
   $('setExam').value = state.settings.exam;
-  $('setFurigana').checked = !!state.settings.furigana;
+  $('setFront').value = frontMode();
   $('setAutoSpeak').checked = !!state.settings.autoSpeak;
 }
 $('saveSettings').addEventListener('click', () => {
   if ($('setStart').value) state.settings.start = $('setStart').value;
   if ($('setExam').value) state.settings.exam = $('setExam').value;
-  state.settings.furigana = $('setFurigana').checked;
+  state.settings.front = $('setFront').value;
   state.settings.autoSpeak = $('setAutoSpeak').checked;
   save();
   toast('Đã lưu cài đặt');
@@ -563,10 +621,16 @@ $('resetBtn').addEventListener('click', () => {
 document.addEventListener('keydown', e => {
   if (['INPUT', 'SELECT', 'TEXTAREA'].includes(e.target.tagName)) return;
   if (currentView === 'study' && session) {
-    if (e.code === 'Space' || e.key === 'Enter') { e.preventDefault(); session.flipped ? grade(true) : flip(); }
+    if (e.code === 'Space' || e.key === 'Enter') {
+      e.preventDefault();
+      if (session.view !== null) nextCard();
+      else session.flipped ? grade(true) : flip();
+    }
     else if (e.key === '1') grade(false);
     else if (e.key === '2') grade(true);
-    else if (e.key === 's') speak(session.queue[0]);
+    else if (e.key === 's') speak(session.shown);
+    else if (e.key === 'ArrowLeft') prevCard();
+    else if (e.key === 'ArrowRight') nextCard();
   } else if (currentView === 'quiz' && quiz && !$('quizRun').classList.contains('hidden')) {
     if (/^[1-4]$/.test(e.key)) answer(Number(e.key) - 1);
     else if (e.key === 'Enter' || e.code === 'Space') { e.preventDefault(); nextQuestion(); }

@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Từ vựng N4 — 30 ngày</title>
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=3">
 </head>
 <body>
 <header>
@@ -36,7 +36,7 @@
       <ul>
         <li><b>Sáng:</b> học từ mới của ngày (~20 phút). <b>Tối:</b> bấm “Ôn tập” để ôn các từ app nhắc.</li>
         <li>Mặt sau mỗi thẻ có <b>câu ví dụ</b> (bấm 🔊 cạnh câu để nghe), <b>âm Hán Việt</b> và các <b>từ có chung chữ Hán</b> — học theo cụm sẽ nhớ nhanh hơn nhiều.</li>
-        <li>Bấm 🔊 để nghe phát âm. Trên máy tính: <kbd>Space</kbd> lật thẻ, <kbd>1</kbd> chưa nhớ, <kbd>2</kbd> nhớ rồi.</li>
+        <li>Bấm 🔊 để nghe phát âm. Trên máy tính: <kbd>Space</kbd> lật thẻ, <kbd>1</kbd> chưa nhớ, <kbd>2</kbd> nhớ rồi, <kbd>←</kbd> <kbd>→</kbd> thẻ trước/sau.</li>
         <li>Ngày 23–30 không học từ mới: chỉ ôn và làm Quiz (chọn phạm vi “Từ hay sai”).</li>
       </ul>
     </div>
@@ -55,6 +55,7 @@
       <span id="studyCount" class="muted"></span>
     </div>
     <div class="progress small"><div id="studyBar"></div></div>
+    <div class="review-banner hidden" id="reviewBanner">👀 Đang xem lại thẻ đã học — bấm <b>Sau ▶</b> để quay về thẻ đang học</div>
     <div id="card" class="card">
       <div class="card-cat" id="cardCat"></div>
       <div class="card-front">
@@ -77,6 +78,10 @@
     <div class="actions hidden" id="gradeActions">
       <button class="btn bad" id="againBtn">😵 Chưa nhớ <small>(1)</small></button>
       <button class="btn good" id="goodBtn">😎 Nhớ rồi <small>(2)</small></button>
+    </div>
+    <div class="nav-row">
+      <button class="btn" id="prevBtn">◀ Trước</button>
+      <button class="btn" id="nextBtn">Bỏ qua ▶</button>
     </div>
   </section>
 
@@ -144,7 +149,13 @@
     <h3>Cài đặt</h3>
     <label>Ngày bắt đầu học <input type="date" id="setStart"></label>
     <label>Ngày thi <input type="date" id="setExam"></label>
-    <label class="check"><input type="checkbox" id="setFurigana"> Hiện kana ở mặt trước thẻ (dễ hơn, nhưng không luyện được cách đọc chữ Hán)</label>
+    <label>Mặt trước thẻ hiển thị
+      <select id="setFront">
+        <option value="kana">Hiragana to, chữ Hán nhỏ bên dưới (mặc định)</option>
+        <option value="kanaOnly">Chỉ hiragana (chữ Hán xem ở mặt sau)</option>
+        <option value="kanji">Chữ Hán (luyện cách đọc chữ Hán)</option>
+      </select>
+    </label>
     <label class="check"><input type="checkbox" id="setAutoSpeak"> Tự đọc phát âm khi lật thẻ</label>
     <button class="btn primary" id="saveSettings">Lưu</button>
     <hr>
@@ -159,7 +170,7 @@
 
 <div id="toast" class="toast hidden"></div>
 
-<script src="data.js"></script>
-<script src="app.js"></script>
+<script src="data.js?v=3"></script>
+<script src="app.js?v=3"></script>
 </body>
 </html>
