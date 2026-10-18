@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Từ vựng N4 — 30 ngày</title>
-<link rel="stylesheet" href="style.css?v=6">
+<link rel="stylesheet" href="style.css?v=7">
 </head>
 <body>
 <header>
@@ -136,6 +136,7 @@
         <button data-m="1">問題1 漢字読み</button>
         <button data-m="2">問題2 表記</button>
         <button data-m="3">問題3 文脈規定</button>
+        <button data-m="4">問題4 言い換え</button>
       </div>
       <h3 id="examTitle"></h3>
       <p class="muted" id="examDesc"></p>
@@ -149,6 +150,7 @@
         <button class="btn" id="bookMixStart">Làm</button>
       </div>
 
+      <div id="genSection">
       <h4>🎲 Đề tự tạo từ 806 từ</h4>
       <label>Phạm vi
         <select id="examScope">
@@ -167,6 +169,7 @@
       </label>
       <label class="check"><input type="checkbox" id="examFuri"> Hiện furigana cho các chữ Hán khác trong câu (bỏ tick để giống đề thi thật hơn)</label>
       <button class="btn primary wide" id="examStart">Tạo đề và làm bài</button>
+      </div>
       <p class="muted" id="examMsg"></p>
       <div id="examHistory"></div>
     </div>
@@ -221,7 +224,7 @@
 
 <div id="toast" class="toast hidden"></div>
 
-<script src="data.js?v=6"></script>
-<script src="app.js?v=6"></script>
+<script src="data.js?v=7"></script>
+<script src="app.js?v=7"></script>
 </body>
 </html>

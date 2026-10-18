@@ -720,7 +720,22 @@ const MONDAI_INFO = {
   3: { title: '問題3　文脈規定 — Điền từ vào câu',
        desc: 'Chọn từ thích hợp nhất để điền vào chỗ trống （　） — kiểm tra nghĩa và cách dùng từ.',
        instr: '問題3　（　）に　なにを　いれますか。１・２・３・４から　いちばん　いい　ものを　ひとつ　えらんで　ください。' },
+  4: { title: '問題4　言い換え類義 — Chọn câu cùng nghĩa',
+       desc: 'Chọn câu có nghĩa gần nhất với câu đề. Phần khác nhau giữa 4 câu được in đậm để dễ so sánh.',
+       instr: '問題4　＿＿＿の　ぶんと　だいたい　おなじ　いみの　ぶんが　あります。１・２・３・４から　いちばん　いい　ものを　ひとつ　えらんで　ください。',
+       noGen: true },
 };
+// 問題4: tìm phần khác nhau giữa 4 câu đáp án (bỏ phần đầu/cuối giống nhau)
+function diffParts(opts) {
+  let pre = 0, suf = 0;
+  const minLen = Math.min(...opts.map(o => o.length));
+  while (pre < minLen && opts.every(o => o[pre] === opts[0][pre])) pre++;
+  while (suf < minLen - pre && opts.every(o => o[o.length - 1 - suf] === opts[0][opts[0].length - 1 - suf])) suf++;
+  // không cắt giữa từ: phần đầu kết thúc ở dấu cách, phần cuối bắt đầu ở dấu cách
+  while (pre > 0 && opts[0][pre - 1] !== ' ') pre--;
+  while (suf > 0 && opts[0][opts[0].length - suf] !== ' ') suf--;
+  return opts.map(o => ({ head: o.slice(0, pre), mid: o.slice(pre, o.length - suf), tail: o.slice(o.length - suf) }));
+}
 const BOOK_TESTS = [];
 Object.entries(typeof MONDAI === 'undefined' ? {} : MONDAI).forEach(([mondai, list]) => list.forEach(q => {
   let t = BOOK_TESTS.find(x => x.test === q.test);
@@ -750,6 +765,15 @@ function bookQuestion(q, mondai) {
       answer, options: q.options.slice(), pick: null, circled: q.circled };
   }
   const m = q.sentence.match(/^(.*)\[(.*?)\](.*)$/);
+  if (mondai === 4) {
+    const parts = diffParts(q.options);
+    const target = m[2].trim();
+    const w = /[\u4e00-\u9fff]/.test(target) ? findVocab(target) : findVocabKana(target.split(' ')[0]);
+    return { mondai, w, mean: q.mean, note: q.note, before: esc(m[1]), target: m[2], after: esc(m[3]), answer,
+      options: q.options.slice(), pick: null, circled: q.circled,
+      optHtml: parts.map(p => `${esc(p.head)}<b class="diff">${esc(p.mid)}</b>${esc(p.tail)}`),
+      answerMid: parts[q.answer - 1].mid };
+  }
   const w = findVocab(mondai === 2 ? answer : m[2]);
   return { mondai, w, mean: q.mean, before: esc(m[1]), target: m[2], after: esc(m[3]), answer,
     options: q.options.slice(), pick: null, circled: q.circled };
@@ -778,6 +802,7 @@ function resetExam() {
   examMondai = state.settings.examMondai || 1;
   document.querySelectorAll('.mondai-tabs button').forEach(b => b.classList.toggle('active', Number(b.dataset.m) === examMondai));
   $('examTitle').textContent = MONDAI_INFO[examMondai].title;
+  $('genSection').classList.toggle('hidden', !!MONDAI_INFO[examMondai].noGen);
   $('examDesc').innerHTML = MONDAI_INFO[examMondai].desc + ' Làm hết rồi bấm <b>Nộp bài</b> để chấm. Câu sai sẽ tự đưa vào ôn tập.';
   const best = state.bookBest || {};
   const tests = BOOK_TESTS.filter(t => t.mondai === examMondai);
@@ -844,7 +869,9 @@ function explainHtml(q) {
   const res = q.pick === null ? '⚪ Chưa làm.' : q.options[q.pick] === q.answer ? '✅ Đúng.' : '❌ Sai.';
   const w = q.w;
   const kanjiText = q.mondai === 2 ? q.answer : q.target;
-  let html = q.mondai === 3
+  let html = q.mondai === 4
+    ? `${res} 「<b class="jp">${esc(q.target)}</b>」 ≈ 「<b class="jp">${esc(q.answerMid)}</b>」 → câu ${q.options.indexOf(q.answer) + 1}`
+    : q.mondai === 3
     ? `${res} Đáp án: <b class="jp">${esc(q.answer)}</b>${w && hasKanji(w) ? ` <span class="jp">(${esc(w.kanji)})</span>` : ''}`
     : q.mondai === 2
     ? `${res} <b class="jp">${esc(q.target)}</b> viết là <b class="jp">${esc(q.answer)}</b>`
@@ -862,17 +889,17 @@ function explainHtml(q) {
 function renderExam(graded) {
   $('examQs').innerHTML = exam.qs.map((q, i) => {
     const opts = q.options.map((o, j) => {
-      let cls = 'm1-opt' + (q.mondai === 2 ? ' kanji' : '');
+      let cls = 'm1-opt' + (q.mondai === 2 ? ' kanji' : q.mondai === 4 ? ' sent' : '');
       if (q.pick === j) cls += ' picked';
       if (graded && o === q.answer) cls += ' correct';
       else if (graded && q.pick === j) cls += ' wrong';
-      return `<button class="${cls}" data-q="${i}" data-o="${j}" ${graded ? 'disabled' : ''}><b>${j + 1}</b> ${esc(o)}</button>`;
+      return `<button class="${cls}" data-q="${i}" data-o="${j}" ${graded ? 'disabled' : ''}><b>${j + 1}</b> ${q.optHtml ? q.optHtml[j] : esc(o)}</button>`;
     }).join('');
     return `<div class="m1-q">
       <div class="m1-sent"><span class="m1-no">${i + 1}</span>${q.before}${q.mondai === 3
         ? (graded ? `<span class="blank filled">（${esc(q.answer)}）</span>` : '<span class="blank">（　　　）</span>')
         : `<u class="m1-target">${esc(q.target)}</u>`}${q.after}</div>
-      <div class="m1-opts">${opts}</div>
+      <div class="m1-opts${q.mondai === 4 ? ' vertical' : ''}">${opts}</div>
       ${graded ? `<div class="m1-explain">${explainHtml(q)}</div>` : ''}</div>`;
   }).join('');
 }

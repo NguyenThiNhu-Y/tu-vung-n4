@@ -261,3 +261,9 @@ h4 { margin: 18px 0 8px; }
 .m1-opt.kanji { font-size: 20px; }
 .blank.filled { color: var(--good); }
 .mondai-tabs button { font-size: 14px; padding: 8px 4px; }
+
+.mondai-tabs { flex-wrap: wrap; }
+.mondai-tabs button { min-width: 22%; }
+.m1-opts.vertical { grid-template-columns: 1fr !important; }
+.m1-opt.sent { font-size: 16px; line-height: 1.7; }
+.m1-opt .diff { font-weight: 700; text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 4px; }
