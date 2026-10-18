@@ -1,4 +1,4 @@
-"""Đọc vocab.txt + hanviet.txt -> data.js (chạy lại sau khi sửa vocab.txt)."""
+"""Đọc vocab.txt + hanviet.txt + examples.tsv -> data.js (chạy lại sau khi sửa vocab.txt)."""
 import json, os
 HERE = os.path.dirname(os.path.abspath(__file__))
 hv = {}
@@ -21,6 +21,17 @@ for line in open(os.path.join(HERE, 'vocab.txt'), encoding='utf-8'):
     seen.add(wid)
     words.append({'id': wid, 'cat': cat, 'kana': kana, 'kanji': kanji,
                   'mean': mean, 'note': note})
+ex_path = os.path.join(HERE, 'examples.tsv')
+examples = {}
+if os.path.exists(ex_path):
+    for line in open(ex_path, encoding='utf-8'):
+        p = line.rstrip('\n').split('\t')
+        if len(p) == 3:
+            examples[p[0]] = (p[1], p[2])
+for w in words:
+    if w['id'] in examples:
+        w['ex'], w['exVi'] = examples[w['id']]
+no_ex = [w['id'] for w in words if 'ex' not in w]
 missing = sorted({c for w in words for c in w['kanji'] if '一' <= c <= '鿿' and c not in hv})
 used = {c for w in words for c in w['kanji']}
 hv = {k: v for k, v in hv.items() if k in used}
@@ -28,4 +39,5 @@ with open(os.path.join(HERE, 'data.js'), 'w', encoding='utf-8') as f:
     f.write('// File tự sinh từ vocab.txt bằng build_data.py — đừng sửa tay\n')
     f.write('const VOCAB = ' + json.dumps(words, ensure_ascii=False) + ';\n')
     f.write('const HANVIET = ' + json.dumps(hv, ensure_ascii=False) + ';\n')
+print('Có câu ví dụ:', len(words) - len(no_ex), '/', len(words), ('— thiếu: ' + ', '.join(no_ex[:10])) if no_ex else '')
 print(len(words), 'từ;', len(hv), 'chữ Hán;', 'thiếu Hán Việt:', ''.join(missing) or 'không')

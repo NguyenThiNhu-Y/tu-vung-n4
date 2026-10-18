@@ -35,7 +35,7 @@
       <h3>Mẹo dùng app</h3>
       <ul>
         <li><b>Sáng:</b> học từ mới của ngày (~20 phút). <b>Tối:</b> bấm “Ôn tập” để ôn các từ app nhắc.</li>
-        <li>Mặt sau mỗi thẻ có <b>âm Hán Việt</b> và các <b>từ có chung chữ Hán</b> — học theo cụm sẽ nhớ nhanh hơn nhiều.</li>
+        <li>Mặt sau mỗi thẻ có <b>câu ví dụ</b> (bấm 🔊 cạnh câu để nghe), <b>âm Hán Việt</b> và các <b>từ có chung chữ Hán</b> — học theo cụm sẽ nhớ nhanh hơn nhiều.</li>
         <li>Bấm 🔊 để nghe phát âm. Trên máy tính: <kbd>Space</kbd> lật thẻ, <kbd>1</kbd> chưa nhớ, <kbd>2</kbd> nhớ rồi.</li>
         <li>Ngày 23–30 không học từ mới: chỉ ôn và làm Quiz (chọn phạm vi “Từ hay sai”).</li>
       </ul>
@@ -65,6 +65,7 @@
         <div class="jp-kana" id="cardKana"></div>
         <div class="meaning" id="cardMean"></div>
         <div class="hv" id="cardHV"></div>
+        <div class="example" id="cardEx"></div>
         <div class="note" id="cardNote"></div>
         <div class="related" id="cardRelated"></div>
       </div>
@@ -85,10 +86,11 @@
       <h3>Quiz kiểu đề JLPT</h3>
       <label>Dạng câu hỏi
         <select id="quizType">
-          <option value="mix">Trộn cả 3 dạng</option>
+          <option value="mix">Trộn cả 4 dạng</option>
           <option value="mean">Chọn nghĩa đúng</option>
           <option value="read">Chọn cách đọc chữ Hán (漢字読み)</option>
           <option value="write">Chọn chữ Hán đúng (表記)</option>
+          <option value="fill">Điền từ vào câu (文脈規定)</option>
         </select>
       </label>
       <label>Phạm vi

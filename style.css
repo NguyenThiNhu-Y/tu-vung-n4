@@ -116,6 +116,22 @@ kbd { border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; font-si
 .meaning { font-size: 22px; font-weight: 600; }
 .hv { color: var(--accent); font-weight: 600; letter-spacing: .5px; }
 .note { font-size: 14px; color: var(--muted); }
+.example {
+  font-family: var(--jp); text-align: left; background: var(--bg); border-radius: 10px;
+  padding: 8px 12px; margin-top: 6px;
+}
+.example .ex-jp { font-size: 19px; line-height: 2.1; }
+.example .ex-vi { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: var(--muted); font-size: 14px; }
+.example:empty { display: none; }
+.example.small { margin-top: 6px; padding: 4px 8px; }
+.example.small .ex-jp { font-size: 15px; line-height: 1.9; }
+.example.small .ex-vi { font-size: 12px; }
+rt { font-size: .5em; color: var(--muted); font-weight: 400; }
+mark { background: var(--accent-soft); color: var(--accent); font-weight: 700; border-radius: 4px; padding: 0 2px; }
+mark rt { color: var(--accent); }
+.blank { color: var(--accent); font-weight: 700; white-space: nowrap; }
+.speak-ex { border: 0; background: none; cursor: pointer; font-size: 15px; padding: 0 2px; vertical-align: middle; }
+.jp-big.jp-sent { font-size: 24px; font-weight: 500; line-height: 2.2; text-align: left; }
 .related { text-align: left; font-size: 14px; border-top: 1px dashed var(--line); padding-top: 8px; margin-top: 4px; }
 .related .grp { margin: 4px 0; }
 .related .k { font-family: var(--jp); font-weight: 700; color: var(--accent); margin-right: 4px; }
@@ -145,6 +161,7 @@ label.check input { margin-top: 5px; }
   border: 1px solid var(--line); border-radius: 10px; background: var(--panel); color: var(--text); cursor: pointer;
 }
 .choice.jp { font-family: var(--jp); font-size: 20px; text-align: center; }
+.opt-kana { font-size: 13px; color: var(--muted); font-weight: 400; }
 .choice.correct { background: var(--good-soft); border-color: var(--good); color: var(--good); font-weight: 700; }
 .choice.wrong { background: var(--bad-soft); border-color: var(--bad); color: var(--bad); }
 .quiz-explain { margin-top: 12px; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px; font-size: 15px; }

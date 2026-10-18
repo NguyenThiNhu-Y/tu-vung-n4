@@ -174,7 +174,7 @@
 かじ|火事|hoả hoạn
 かじ|家事|việc nhà
 かたち|形|hình dạng
-かちょう|課長|trưởng nhóm
+かちょう|課長|trưởng phòng, trưởng nhóm
 かっこう||tư thế, hình thức, phong thái
 かない|家内|vợ (mình)
 かねもち|(お)金持ち|người giàu, đại gia
@@ -794,7 +794,7 @@
 たいてい||hầu hết, nói chung
 だいぶ||đáng kể; nhiều; khá
 たとえば|例えば|ví dụ như
-たまに||hiếm khi
+たまに||thỉnh thoảng, đôi khi
 ちっとも||chẳng hề..., một chút cũng không
 できるだけ||nếu được, nếu có thể
 とうとう||cuối cùng, rốt cuộc
