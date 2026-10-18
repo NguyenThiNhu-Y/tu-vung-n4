@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Từ vựng N4 — 30 ngày</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1 id="homeLink">📚 Từ vựng N4</h1>
+  <nav>
+    <button data-view="home" class="active">Hôm nay</button>
+    <button data-view="plan">Lịch 30 ngày</button>
+    <button data-view="quiz">Quiz</button>
+    <button data-view="list">Danh sách</button>
+    <button data-view="settings">⚙︎</button>
+  </nav>
+</header>
+
+<main>
+  <!-- HÔM NAY -->
+  <section id="view-home" class="view">
+    <div class="countdown" id="countdown"></div>
+    <div class="cards-row">
+      <div class="stat"><b id="statSeen">0</b><span>đã học / <span id="statTotal"></span></span></div>
+      <div class="stat"><b id="statDue">0</b><span>cần ôn hôm nay</span></div>
+      <div class="stat"><b id="statWeak">0</b><span>từ hay sai</span></div>
+    </div>
+    <div class="progress"><div id="progressBar"></div></div>
+
+    <div class="todo" id="todoBox"></div>
+
+    <div class="tips">
+      <h3>Mẹo dùng app</h3>
+      <ul>
+        <li><b>Sáng:</b> học từ mới của ngày (~20 phút). <b>Tối:</b> bấm “Ôn tập” để ôn các từ app nhắc.</li>
+        <li>Mặt sau mỗi thẻ có <b>âm Hán Việt</b> và các <b>từ có chung chữ Hán</b> — học theo cụm sẽ nhớ nhanh hơn nhiều.</li>
+        <li>Bấm 🔊 để nghe phát âm. Trên máy tính: <kbd>Space</kbd> lật thẻ, <kbd>1</kbd> chưa nhớ, <kbd>2</kbd> nhớ rồi.</li>
+        <li>Ngày 23–30 không học từ mới: chỉ ôn và làm Quiz (chọn phạm vi “Từ hay sai”).</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- LỊCH -->
+  <section id="view-plan" class="view hidden">
+    <p class="muted">Từ được chia thành 22 ngày học mới + 8 ngày ôn tổng. Bấm vào một ngày để học ngày đó.</p>
+    <div id="planGrid" class="plan-grid"></div>
+  </section>
+
+  <!-- FLASHCARD -->
+  <section id="view-study" class="view hidden">
+    <div class="study-head">
+      <span id="studyTitle"></span>
+      <span id="studyCount" class="muted"></span>
+    </div>
+    <div class="progress small"><div id="studyBar"></div></div>
+    <div id="card" class="card">
+      <div class="card-cat" id="cardCat"></div>
+      <div class="card-front">
+        <div class="jp-big" id="cardWord"></div>
+        <div class="jp-kana" id="cardKanaFront"></div>
+      </div>
+      <div class="card-back hidden" id="cardBack">
+        <div class="jp-kana" id="cardKana"></div>
+        <div class="meaning" id="cardMean"></div>
+        <div class="hv" id="cardHV"></div>
+        <div class="note" id="cardNote"></div>
+        <div class="related" id="cardRelated"></div>
+      </div>
+      <button class="speak" id="speakBtn" title="Nghe phát âm">🔊</button>
+    </div>
+    <div class="actions" id="flipActions">
+      <button class="btn primary wide" id="flipBtn">Lật thẻ</button>
+    </div>
+    <div class="actions hidden" id="gradeActions">
+      <button class="btn bad" id="againBtn">😵 Chưa nhớ <small>(1)</small></button>
+      <button class="btn good" id="goodBtn">😎 Nhớ rồi <small>(2)</small></button>
+    </div>
+  </section>
+
+  <!-- QUIZ -->
+  <section id="view-quiz" class="view hidden">
+    <div id="quizSetup">
+      <h3>Quiz kiểu đề JLPT</h3>
+      <label>Dạng câu hỏi
+        <select id="quizType">
+          <option value="mix">Trộn cả 3 dạng</option>
+          <option value="mean">Chọn nghĩa đúng</option>
+          <option value="read">Chọn cách đọc chữ Hán (漢字読み)</option>
+          <option value="write">Chọn chữ Hán đúng (表記)</option>
+        </select>
+      </label>
+      <label>Phạm vi
+        <select id="quizScope">
+          <option value="seen">Các từ đã học</option>
+          <option value="today">Từ của ngày đang học</option>
+          <option value="weak">Từ hay sai</option>
+          <option value="all">Tất cả 806 từ</option>
+        </select>
+      </label>
+      <label>Số câu
+        <select id="quizNum">
+          <option>10</option><option selected>20</option><option>30</option><option>50</option>
+        </select>
+      </label>
+      <button class="btn primary wide" id="quizStart">Bắt đầu</button>
+      <p class="muted" id="quizMsg"></p>
+    </div>
+    <div id="quizRun" class="hidden">
+      <div class="study-head"><span id="quizProgress"></span><span id="quizScore" class="muted"></span></div>
+      <div class="progress small"><div id="quizBar"></div></div>
+      <div class="card quiz-card">
+        <div class="card-cat" id="quizAsk"></div>
+        <div class="jp-big" id="quizQ"></div>
+      </div>
+      <div class="choices" id="quizChoices"></div>
+      <div class="quiz-explain hidden" id="quizExplain"></div>
+      <div class="actions"><button class="btn primary wide hidden" id="quizNext">Câu tiếp ▶</button></div>
+    </div>
+    <div id="quizDone" class="hidden"></div>
+  </section>
+
+  <!-- DANH SÁCH -->
+  <section id="view-list" class="view hidden">
+    <div class="list-tools">
+      <input id="search" placeholder="Tìm: kana, chữ Hán, nghĩa hoặc Hán Việt…">
+      <select id="listCat"></select>
+      <select id="listFilter">
+        <option value="all">Tất cả</option>
+        <option value="new">Chưa học</option>
+        <option value="seen">Đã học</option>
+        <option value="weak">Hay sai</option>
+      </select>
+    </div>
+    <p class="muted" id="listCount"></p>
+    <table class="vocab-table"><tbody id="listBody"></tbody></table>
+  </section>
+
+  <!-- CÀI ĐẶT -->
+  <section id="view-settings" class="view hidden">
+    <h3>Cài đặt</h3>
+    <label>Ngày bắt đầu học <input type="date" id="setStart"></label>
+    <label>Ngày thi <input type="date" id="setExam"></label>
+    <label class="check"><input type="checkbox" id="setFurigana"> Hiện kana ở mặt trước thẻ (dễ hơn, nhưng không luyện được cách đọc chữ Hán)</label>
+    <label class="check"><input type="checkbox" id="setAutoSpeak"> Tự đọc phát âm khi lật thẻ</label>
+    <button class="btn primary" id="saveSettings">Lưu</button>
+    <hr>
+    <h3>Sao lưu tiến độ</h3>
+    <p class="muted">Tiến độ được lưu trong trình duyệt này. Nếu đổi máy hoặc trình duyệt, hãy xuất ra file rồi nhập lại ở máy mới.</p>
+    <button class="btn" id="exportBtn">Xuất file tiến độ</button>
+    <label class="btn file-btn">Nhập file tiến độ<input type="file" id="importFile" accept=".json" hidden></label>
+    <hr>
+    <button class="btn bad" id="resetBtn">Xoá toàn bộ tiến độ</button>
+  </section>
+</main>
+
+<div id="toast" class="toast hidden"></div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
