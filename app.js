@@ -732,6 +732,10 @@ const MONDAI_INFO = {
        desc: 'Chọn trợ từ / mẫu ngữ pháp đúng để điền vào chỗ trống （　）.',
        instr: '問題1　（　）に　何を　入れますか。１・２・３・４から　いちばん　いい　ものを　一つ　えらんで　ください。',
        noGen: true },
+  7: { title: '文法2　文の組み立て — Sắp xếp câu ★',
+       desc: 'Sắp xếp 4 cụm từ vào 4 ô cho thành câu đúng, rồi chọn cụm nằm ở ô <b>★</b>. Mẹo: ghép các cụm hiển nhiên đi liền nhau trước.',
+       instr: '問題2　★に　入る　ものは　どれですか。１・２・３・４から　いちばん　いい　ものを　一つ　えらんで　ください。',
+       noGen: true },
 };
 const nl2br = html => html.replace(/\n/g, '<br>');
 // 問題4: tìm phần khác nhau giữa 4 câu đáp án (bỏ phần đầu/cuối giống nhau)
@@ -770,9 +774,13 @@ function bookQuestion(q, mondai) {
   const answer = q.options[q.answer - 1];
   if (mondai === 5) {
     const w = /[\u4e00-\u9fff]/.test(q.word) ? findVocab(q.word) : findVocabKana(q.word);
-    return { mondai, w, mean: q.mean, note: q.note, word: q.word, target: q.word, answer,
+    return { mondai, xp: q.xp, w, mean: q.mean, note: q.note, word: q.word, target: q.word, answer,
       options: q.options.slice(), pick: null, circled: q.circled,
       optHtml: q.options.map(o => esc(o).replace(/\[(.*?)\]/, '<u class="m1-target">$1</u>')) };
+  }
+  if (mondai === 7) {
+    return { mondai, xp: q.xp, w: null, note: q.note, tokens: q.sentence.split(/(＿＿|★)/), order: q.order, answer,
+      options: q.options.slice(), pick: null, circled: q.circled };
   }
   if (mondai === 6) {
     const parts = q.sentence.split('（　）');
@@ -889,7 +897,9 @@ function explainHtml(q) {
   const res = q.pick === null ? '⚪ Chưa làm.' : q.options[q.pick] === q.answer ? '✅ Đúng.' : '❌ Sai.';
   const w = q.w;
   const kanjiText = (q.mondai === 2 ? q.answer : q.target) || '';
-  let html = q.mondai === 5
+  let html = q.mondai === 7
+    ? `${res} Thứ tự đúng: <b>${q.order.join(' → ')}</b> · ★ = <b class="jp">${esc(q.answer)}</b>`
+    : q.mondai === 5
     ? `${res} Câu dùng đúng: <b>câu ${q.options.indexOf(q.answer) + 1}</b> · <b class="jp">${esc(q.word)}</b>${w && hasKanji(w) ? ` <span class="jp">(${esc(w.kanji)})</span>` : ''}`
     : q.mondai === 6
     ? `${res} Đáp án: <b class="jp">${esc(q.answer)}</b>`
@@ -907,13 +917,24 @@ function explainHtml(q) {
   if (q.circled && q.options[q.circled - 1] !== q.answer)
     html += `<div class="muted">📌 Trên sách bạn từng khoanh ${q.circled} (${esc(q.options[q.circled - 1])}) — câu này dễ nhầm, nhớ kỹ nhé.</div>`;
   if (q.xp) {
-    html += `<div class="xp"><div class="xp-vi">🇻🇳 ${nl2br(esc(q.xp.vi))}</div><div class="xp-why">💡 ${esc(q.xp.why)}</div>
+    html += `<div class="xp"><div class="xp-vi">${q.mondai === 5 ? '📖' : '🇻🇳'} ${nl2br(esc(q.xp.vi))}</div><div class="xp-why">💡 ${esc(q.xp.why)}</div>
       <ul class="xp-opts">${q.xp.opts.map((o, j) => { const ok = q.options[j] === q.answer;
-        return `<li class="${ok ? 'ok' : 'bad'}${q.pick === j ? ' picked' : ''}"><b>${ok ? '✓' : '✗'} ${j + 1}.</b> ${esc(o.replace(/^[✓✗]\s*/, ''))}</li>`; }).join('')}</ul></div>`;
+        const mark = q.mondai === 7 ? (ok ? '★' : '•') : ok ? '✓' : '✗';
+        return `<li class="${ok ? 'ok' : q.mondai === 7 ? 'neutral' : 'bad'}${q.pick === j ? ' picked' : ''}"><b>${mark} ${j + 1}.</b> ${esc(o.replace(/^[✓✗]\s*/, ''))}</li>`; }).join('')}</ul></div>`;
   }
   if (q.note) html += `<div class="muted">⚠️ ${esc(q.note)}</div>`;
   if (w?.ex) html += `<div class="example">${exBlock(w)}</div>`;
   return html;
+}
+// 文法2 ★: hiện 4 ô trống; khi chấm điền theo thứ tự đúng, tô ô ★
+function starSentence(q, graded) {
+  let slot = 0;
+  return q.tokens.map(t => {
+    if (t !== '＿＿' && t !== '★') return nl2br(esc(t));
+    const i = slot++;
+    if (!graded) return `<span class="slot${t === '★' ? ' star' : ''}">${t === '★' ? '★' : ''}</span>`;
+    return `<span class="slot filled${t === '★' ? ' star' : ''}">${esc(q.options[q.order[i] - 1])}</span>`;
+  }).join('');
 }
 function renderExam(graded) {
   $('examQs').innerHTML = exam.qs.map((q, i) => {
@@ -927,6 +948,8 @@ function renderExam(graded) {
     return `<div class="m1-q">
       <div class="m1-sent"><span class="m1-no">${i + 1}</span>${q.mondai === 5
         ? `<span class="m5-word">${esc(q.word)}</span>`
+        : q.mondai === 7
+        ? starSentence(q, graded)
         : q.mondai === 6
         ? q.parts.map((p, k) => k === 0 ? p : (graded && q.parts.length === 2
             ? `<span class="blank filled">（${esc(q.answer)}）</span>` : '<span class="blank">（　　　）</span>') + p).join('')

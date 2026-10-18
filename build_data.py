@@ -34,7 +34,7 @@ for w in words:
 no_ex = [w['id'] for w in words if 'ex' not in w]
 # Đề trong sách: mondai1.jsonl, mondai2.jsonl (mỗi dòng 1 câu hỏi)
 mondai = {}
-for n in (1, 2, 3, 4, 5, 6):
+for n in (1, 2, 3, 4, 5, 6, 7):
     path = os.path.join(HERE, f'mondai{n}.jsonl')
     if not os.path.exists(path):
         continue
@@ -42,7 +42,7 @@ for n in (1, 2, 3, 4, 5, 6):
     for line in open(path, encoding='utf-8'):
         if line.strip():
             q = json.loads(line)
-            mondai[n].append({k: q[k] for k in ('test', 'no', 'word', 'sentence', 'options', 'answer', 'circled', 'mean', 'note', 'xp') if k in q})
+            mondai[n].append({k: q[k] for k in ('test', 'no', 'word', 'sentence', 'options', 'answer', 'circled', 'mean', 'note', 'xp', 'order') if k in q})
 missing = sorted({c for w in words for c in w['kanji'] if '一' <= c <= '鿿' and c not in hv})
 used = {c for w in words for c in w['kanji']} | {c for qs in mondai.values() for q in qs for c in q.get('sentence', q.get('word', '')) + ''.join(q['options'])}
 hv = {k: v for k, v in hv.items() if k in used}

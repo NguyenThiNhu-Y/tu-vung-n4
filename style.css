@@ -282,3 +282,10 @@ h4 { margin: 18px 0 8px; }
 .xp-opts li.bad b { color: var(--bad); }
 .xp-opts li.picked.bad { color: var(--bad); }
 .xp-opts li.picked::after { content: "  ← bạn chọn"; font-size: 12px; font-weight: 400; }
+
+/* 文法2 ★ */
+.slot { display: inline-block; min-width: 3.2em; border-bottom: 2px solid var(--text); margin: 0 3px; text-align: center; line-height: 1.6; }
+.slot.star { color: var(--accent); font-weight: 700; }
+.slot.filled { min-width: 0; padding: 0 4px; border-bottom-color: var(--muted); }
+.slot.filled.star { color: var(--good); border-bottom-color: var(--good); background: var(--good-soft); border-radius: 4px 4px 0 0; }
+.xp-opts li.neutral { color: var(--text); }
