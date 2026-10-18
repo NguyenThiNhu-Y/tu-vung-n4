@@ -267,3 +267,6 @@ h4 { margin: 18px 0 8px; }
 .m1-opts.vertical { grid-template-columns: 1fr !important; }
 .m1-opt.sent { font-size: 16px; line-height: 1.7; }
 .m1-opt .diff { font-weight: 700; text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 4px; }
+
+.m5-word { font-size: 24px; font-weight: 700; }
+.mondai-tabs button { min-width: 30%; }

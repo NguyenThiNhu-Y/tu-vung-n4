@@ -724,7 +724,16 @@ const MONDAI_INFO = {
        desc: 'Chọn câu có nghĩa gần nhất với câu đề. Phần khác nhau giữa 4 câu được in đậm để dễ so sánh.',
        instr: '問題4　＿＿＿の　ぶんと　だいたい　おなじ　いみの　ぶんが　あります。１・２・３・４から　いちばん　いい　ものを　ひとつ　えらんで　ください。',
        noGen: true },
+  5: { title: '問題5　用法 — Chọn câu dùng từ đúng',
+       desc: 'Cho một từ và 4 câu đều dùng từ đó — chọn câu dùng <b>đúng nghĩa, đúng ngữ cảnh</b>.',
+       instr: '問題5　つぎの　ことばの　つかいかたで　いちばん　いい　ものを　１・２・３・４から　ひとつ　えらんで　ください。',
+       noGen: true },
+  6: { title: '文法1　文法形式の判断 — Chọn ngữ pháp',
+       desc: 'Chọn trợ từ / mẫu ngữ pháp đúng để điền vào chỗ trống （　）.',
+       instr: '問題1　（　）に　何を　入れますか。１・２・３・４から　いちばん　いい　ものを　一つ　えらんで　ください。',
+       noGen: true },
 };
+const nl2br = html => html.replace(/\n/g, '<br>');
 // 問題4: tìm phần khác nhau giữa 4 câu đáp án (bỏ phần đầu/cuối giống nhau)
 function diffParts(opts) {
   let pre = 0, suf = 0;
@@ -759,6 +768,17 @@ function findVocab(target) {
 }
 function bookQuestion(q, mondai) {
   const answer = q.options[q.answer - 1];
+  if (mondai === 5) {
+    const w = /[\u4e00-\u9fff]/.test(q.word) ? findVocab(q.word) : findVocabKana(q.word);
+    return { mondai, w, mean: q.mean, note: q.note, word: q.word, target: q.word, answer,
+      options: q.options.slice(), pick: null, circled: q.circled,
+      optHtml: q.options.map(o => esc(o).replace(/\[(.*?)\]/, '<u class="m1-target">$1</u>')) };
+  }
+  if (mondai === 6) {
+    const parts = q.sentence.split('（　）');
+    return { mondai, w: null, mean: q.mean, note: q.note, parts: parts.map(p => nl2br(esc(p))), answer,
+      options: q.options.slice(), pick: null, circled: q.circled };
+  }
   if (mondai === 3) {
     const [before, after] = q.sentence.split('（　）');
     return { mondai, w: findVocabKana(answer), mean: q.mean, note: q.note, before: esc(before), target: '', after: esc(after ?? ''),
@@ -868,8 +888,12 @@ function startExam(qs, name, bookTest, mondai) {
 function explainHtml(q) {
   const res = q.pick === null ? '⚪ Chưa làm.' : q.options[q.pick] === q.answer ? '✅ Đúng.' : '❌ Sai.';
   const w = q.w;
-  const kanjiText = q.mondai === 2 ? q.answer : q.target;
-  let html = q.mondai === 4
+  const kanjiText = (q.mondai === 2 ? q.answer : q.target) || '';
+  let html = q.mondai === 5
+    ? `${res} Câu dùng đúng: <b>câu ${q.options.indexOf(q.answer) + 1}</b> · <b class="jp">${esc(q.word)}</b>${w && hasKanji(w) ? ` <span class="jp">(${esc(w.kanji)})</span>` : ''}`
+    : q.mondai === 6
+    ? `${res} Đáp án: <b class="jp">${esc(q.answer)}</b>`
+    : q.mondai === 4
     ? `${res} 「<b class="jp">${esc(q.target)}</b>」 ≈ 「<b class="jp">${esc(q.answerMid)}</b>」 → câu ${q.options.indexOf(q.answer) + 1}`
     : q.mondai === 3
     ? `${res} Đáp án: <b class="jp">${esc(q.answer)}</b>${w && hasKanji(w) ? ` <span class="jp">(${esc(w.kanji)})</span>` : ''}`
@@ -889,17 +913,22 @@ function explainHtml(q) {
 function renderExam(graded) {
   $('examQs').innerHTML = exam.qs.map((q, i) => {
     const opts = q.options.map((o, j) => {
-      let cls = 'm1-opt' + (q.mondai === 2 ? ' kanji' : q.mondai === 4 ? ' sent' : '');
+      let cls = 'm1-opt' + (q.mondai === 2 ? ' kanji' : q.mondai === 4 || q.mondai === 5 ? ' sent' : '');
       if (q.pick === j) cls += ' picked';
       if (graded && o === q.answer) cls += ' correct';
       else if (graded && q.pick === j) cls += ' wrong';
       return `<button class="${cls}" data-q="${i}" data-o="${j}" ${graded ? 'disabled' : ''}><b>${j + 1}</b> ${q.optHtml ? q.optHtml[j] : esc(o)}</button>`;
     }).join('');
     return `<div class="m1-q">
-      <div class="m1-sent"><span class="m1-no">${i + 1}</span>${q.before}${q.mondai === 3
+      <div class="m1-sent"><span class="m1-no">${i + 1}</span>${q.mondai === 5
+        ? `<span class="m5-word">${esc(q.word)}</span>`
+        : q.mondai === 6
+        ? q.parts.map((p, k) => k === 0 ? p : (graded && q.parts.length === 2
+            ? `<span class="blank filled">（${esc(q.answer)}）</span>` : '<span class="blank">（　　　）</span>') + p).join('')
+        : ''}${q.mondai >= 5 ? '' : q.before}${q.mondai >= 5 ? '' : q.mondai === 3
         ? (graded ? `<span class="blank filled">（${esc(q.answer)}）</span>` : '<span class="blank">（　　　）</span>')
-        : `<u class="m1-target">${esc(q.target)}</u>`}${q.after}</div>
-      <div class="m1-opts${q.mondai === 4 ? ' vertical' : ''}">${opts}</div>
+        : `<u class="m1-target">${esc(q.target)}</u>`}${q.mondai >= 5 ? '' : q.after}</div>
+      <div class="m1-opts${q.mondai === 4 || q.mondai === 5 ? ' vertical' : ''}">${opts}</div>
       ${graded ? `<div class="m1-explain">${explainHtml(q)}</div>` : ''}</div>`;
   }).join('');
 }
