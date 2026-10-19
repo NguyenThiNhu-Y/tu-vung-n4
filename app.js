@@ -842,7 +842,7 @@ PAST_EXAMS.sort((a, b) => (a.exam < b.exam ? -1 : 1));
 PAST_EXAMS.forEach(e => e.qs.sort((a, b) => a.type - b.type || a.no - b.no));
 const examLabel = code => /^\d{4}-\d{2}$/.test(code)
   ? (code === '2010-11' ? 'JLPT 2010–2011' : `JLPT ${Number(code.slice(5))}/${code.slice(0, 4)}`)
-  : `Đề ${code}`;
+  : code === 'mogi' ? 'Đề thi thử (Mogi)' : `Đề ${code}`;
 const SYN = typeof SYNONYMS === 'undefined' ? [] : SYNONYMS;
 
 // Câu hỏi từ đồng nghĩa: cho từ/câu A, chọn cách nói cùng nghĩa B
