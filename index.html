@@ -4,11 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Từ vựng N4 — 30 ngày</title>
-<link rel="stylesheet" href="style.css?v=11">
+<link rel="stylesheet" href="style.css?v=12">
 </head>
 <body>
 <header>
   <h1 id="homeLink">📚 Từ vựng N4</h1>
+  <button id="userChip" class="user-chip"></button>
   <nav>
     <button data-view="home" class="active">Hôm nay</button>
     <button data-view="plan">Lịch 30 ngày</button>
@@ -230,8 +231,17 @@
     <label class="check"><input type="checkbox" id="setAutoSpeak"> Tự đọc phát âm khi lật thẻ</label>
     <button class="btn primary" id="saveSettings">Lưu</button>
     <hr>
-    <h3>Sao lưu tiến độ</h3>
-    <p class="muted">Tiến độ được lưu trong trình duyệt này. Nếu đổi máy hoặc trình duyệt, hãy xuất ra file rồi nhập lại ở máy mới.</p>
+    <h3>👤 Đồng bộ giữa các máy</h3>
+    <p class="muted" id="syncNote"></p>
+    <div class="sync-row">
+      <input id="syncUser" placeholder="username, vd: nhuy-n4-2026" autocapitalize="none" autocomplete="username">
+      <button class="btn primary" id="syncLogin">Đồng bộ</button>
+      <button class="btn" id="syncLogout">Thoát</button>
+    </div>
+    <p class="muted" id="syncStatus"></p>
+    <hr>
+    <h3>Sao lưu bằng file</h3>
+    <p class="muted">Dự phòng khi không có mạng: xuất ra file rồi nhập ở máy khác (tiến độ được <b>gộp</b>, không bị ghi đè).</p>
     <button class="btn" id="exportBtn">Xuất file tiến độ</button>
     <label class="btn file-btn">Nhập file tiến độ<input type="file" id="importFile" accept=".json" hidden></label>
     <hr>
@@ -241,7 +251,9 @@
 
 <div id="toast" class="toast hidden"></div>
 
-<script src="data.js?v=11"></script>
-<script src="app.js?v=11"></script>
+<script src="data.js?v=12"></script>
+<script src="app.js?v=12"></script>
+<script src="sync-config.js?v=12"></script>
+<script src="sync.js?v=12"></script>
 </body>
 </html>

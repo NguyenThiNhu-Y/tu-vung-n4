@@ -300,3 +300,10 @@ h4 { margin: 18px 0 8px; }
 .passage { font-family: var(--jp); font-size: 17px; line-height: 2; background: var(--bg); border-radius: 8px; padding: 10px 12px;
   max-height: 340px; overflow-y: auto; }
 .src-line { margin-top: 6px; font-size: 12px; }
+
+/* Đồng bộ */
+.user-chip { margin-left: auto; border: 1px solid var(--good); background: var(--good-soft); color: var(--good);
+  border-radius: 99px; padding: 4px 10px; font-size: 13px; font-weight: 600; cursor: pointer; }
+.user-chip.off { border-color: var(--line); background: var(--panel); color: var(--muted); font-weight: 400; }
+.sync-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.sync-row input { flex: 1; min-width: 180px; margin: 0 !important; }

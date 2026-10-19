@@ -1215,19 +1215,22 @@ $('importFile').addEventListener('change', async e => {
   try {
     const s = JSON.parse(await file.text());
     if (!s.cards || !s.settings) throw new Error();
-    state = s;
+    state = typeof mergeStates === 'function' ? mergeStates(s, state) : s;
     save();
     renderSettings();
-    toast('Đã nhập tiến độ');
+    toast('Đã gộp tiến độ từ file');
   } catch (err) {
     toast('File không hợp lệ');
   }
   e.target.value = '';
 });
 $('resetBtn').addEventListener('click', () => {
-  if (!confirm('Xoá toàn bộ tiến độ học? Không thể hoàn tác.')) return;
+  const online = typeof syncUser !== 'undefined' && syncUser;
+  if (!confirm(online ? `Xoá toàn bộ tiến độ học, cả bản đồng bộ của "${syncUser}" trên mạng? Không thể hoàn tác.`
+    : 'Xoá toàn bộ tiến độ học? Không thể hoàn tác.')) return;
   localStorage.removeItem(STORE_KEY);
   state = load();
+  if (online) syncPush(state).catch(() => toast('Không xoá được bản trên mạng — thử lại khi có mạng'));
   save();
   toast('Đã xoá tiến độ');
   showView('home');
