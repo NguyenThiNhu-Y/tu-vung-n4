@@ -184,6 +184,9 @@ function renderHome() {
   }
   items.push(todoItem('🔁 Ôn tập', due ? `${due} từ đến hạn ôn hôm nay` : 'Không có từ nào cần ôn — tốt lắm!',
     'Ôn', () => startReview(), !due));
+  const dueQ = ALL_ITEMS.filter(it => isQDue(it.qid)).length;
+  items.push(todoItem('🗂 Luyện đề', dueQ ? `${dueQ} câu đề (sách + JLPT thật) đến hạn ôn lại` : 'Làm đề trộn tổng hợp hoặc một đề JLPT thật',
+    dueQ ? 'Ôn' : 'Làm', () => { showView('exam'); if (dueQ) $('reviewWrong').click(); }));
   items.push(todoItem('📝 Quiz kiểu JLPT', weak ? `${weak} từ hay sai đang chờ bạn` : 'Kiểm tra nghĩa, cách đọc và chữ Hán',
     'Làm', () => showView('quiz')));
   const box = $('todoBox');
@@ -732,6 +735,13 @@ const MONDAI_INFO = {
        desc: 'Chọn trợ từ / mẫu ngữ pháp đúng để điền vào chỗ trống （　）.',
        instr: '問題1　（　）に　何を　入れますか。１・２・３・４から　いちばん　いい　ものを　一つ　えらんで　ください。',
        noGen: true },
+  8: { title: '文法3　文章の文法 — Đoạn văn',
+       desc: 'Đọc đoạn văn và chọn từ / mẫu ngữ pháp hợp với mạch văn cho từng chỗ trống.',
+       instr: '問題3　文章の　意味を　考えて、（　）に　入る　最も　よい　ものを　１・２・３・４から　一つ　えらんで　ください。',
+       noGen: true },
+  9: { title: 'Từ đồng nghĩa JLPT', desc: 'Các cặp đồng nghĩa đã từng ra trong đề JLPT N4.',
+       instr: 'つぎの　ことばと　だいたい　おなじ　いみの　ものを　１・２・３・４から　ひとつ　えらんで　ください。',
+       noGen: true },
   7: { title: '文法2　文の組み立て — Sắp xếp câu ★',
        desc: 'Sắp xếp 4 cụm từ vào 4 ô cho thành câu đúng, rồi chọn cụm nằm ở ô <b>★</b>. Mẹo: ghép các cụm hiển nhiên đi liền nhau trước.',
        instr: '問題2　★に　入る　ものは　どれですか。１・２・３・４から　いちばん　いい　ものを　一つ　えらんで　ください。',
@@ -778,6 +788,10 @@ function bookQuestion(q, mondai) {
       options: q.options.slice(), pick: null, circled: q.circled,
       optHtml: q.options.map(o => esc(o).replace(/\[(.*?)\]/, '<u class="m1-target">$1</u>')) };
   }
+  if (mondai === 8) {
+    return { mondai, xp: q.xp, w: null, note: q.note, passage: q.passage, blank: String(q.blank), answer,
+      options: q.options.slice(), pick: null, circled: q.circled };
+  }
   if (mondai === 7) {
     return { mondai, xp: q.xp, w: null, note: q.note, tokens: q.sentence.split(/(＿＿|★)/), order: q.order, answer,
       options: q.options.slice(), pick: null, circled: q.circled };
@@ -817,6 +831,103 @@ function genQuestion(w, furi, mondai) {
     after: sentPart(w.m1.after, furi), answer: g.answer, options: g.options, pick: null };
 }
 
+// ===== Kho câu hỏi chung: đề sách + đề thi thật + từ đồng nghĩa =====
+const PAST_EXAMS = [];
+(typeof PAST === 'undefined' ? [] : PAST).forEach(q => {
+  let e = PAST_EXAMS.find(x => x.exam === q.exam);
+  if (!e) PAST_EXAMS.push(e = { exam: q.exam, qs: [] });
+  e.qs.push(q);
+});
+PAST_EXAMS.sort((a, b) => (a.exam < b.exam ? -1 : 1));
+PAST_EXAMS.forEach(e => e.qs.sort((a, b) => a.type - b.type || a.no - b.no));
+const examLabel = code => /^\d{4}-\d{2}$/.test(code)
+  ? (code === '2010-11' ? 'JLPT 2010–2011' : `JLPT ${Number(code.slice(5))}/${code.slice(0, 4)}`)
+  : `Đề ${code}`;
+const SYN = typeof SYNONYMS === 'undefined' ? [] : SYNONYMS;
+
+// Câu hỏi từ đồng nghĩa: cho từ/câu A, chọn cách nói cùng nghĩa B
+function synQuestion(p) {
+  const others = shuffle(SYN.filter(o => o !== p && o.b !== p.b)).slice(0, 3);
+  const pairs = shuffle([p, ...others]);
+  return { mondai: 9, w: findVocab(p.a) || null, word: p.a, kana: p.a_kana, answer: p.b,
+    options: pairs.map(o => o.b), pick: null,
+    xp: { vi: `${p.a} ≈ ${p.b}: ${p.vi}`, why: `Cặp đồng nghĩa đã xuất hiện trong ${examLabel(p.exam)}.`,
+      opts: pairs.map(o => `${o === p ? '✓' : '✗'} ${o.b}: ${o.vi}`) } };
+}
+function mkQ(item) {
+  const o = item.mondai === 9 ? synQuestion(item.raw) : bookQuestion(item.raw, item.mondai);
+  o.qid = item.qid; o.src = item.src;
+  o.ai = item.mondai === 9 ? o.options.indexOf(o.answer) : item.raw.answer - 1;
+  return o;
+}
+// Lựa chọn j có phải đáp án? (đề có thể in 2 lựa chọn trùng chữ nên ưu tiên so theo vị trí)
+const isAns = (q, j) => (q.ai != null ? j === q.ai : q.options[j] === q.answer);
+const ansNo = q => (q.ai != null ? q.ai : q.options.indexOf(q.answer)) + 1;
+// Danh sách mọi câu hỏi (dạng "item" để tạo câu hỏi khi cần)
+const ALL_ITEMS = [
+  ...BOOK_TESTS.flatMap(t => t.qs.map(q => ({ qid: `B${t.mondai}|${t.test}|${q.no}`, mondai: t.mondai, raw: q, src: `Sách · ${t.test} · câu ${q.no}` }))),
+  ...PAST_EXAMS.flatMap(e => e.qs.map(q => ({ qid: `P|${e.exam}|${q.type}|${q.no}`, mondai: q.type, raw: q, src: `${examLabel(e.exam)} · câu ${q.no}` }))),
+  ...SYN.map(p => ({ qid: `S|${p.exam}|${p.no}`, mondai: 9, raw: p, src: `Đồng nghĩa · ${examLabel(p.exam)}` })),
+];
+const qstat = id => (state.qstats || {})[id];
+const isQDue = id => { const s = qstat(id); return !!s && s.due && s.due <= todayStr(); };
+// Ghi kết quả từng câu: đúng thì giãn lịch 1→3→7→14→30 ngày, sai thì quay lại ngay
+function recordQ(q, ok) {
+  if (!q.qid) return;
+  const s = ((state.qstats ||= {})[q.qid] ||= { r: 0, w: 0, box: 0, due: null });
+  if (ok) { s.r++; s.box = Math.min(s.box + 1, INTERVALS.length - 1); s.due = addDays(todayStr(), INTERVALS[s.box]); }
+  else { s.w++; s.box = 0; s.due = todayStr(); }
+}
+// Đề trộn: ưu tiên câu đến hạn ôn → câu chưa làm (rải đều các dạng) → câu còn lại
+function pickMix(n) {
+  const due = shuffle(ALL_ITEMS.filter(it => isQDue(it.qid))).sort((a, b) => qstat(a.qid).box - qstat(b.qid).box);
+  const picked = due.slice(0, Math.ceil(n * 0.6));
+  const byM = {};
+  shuffle(ALL_ITEMS.filter(it => !qstat(it.qid))).forEach(it => (byM[it.mondai] ||= []).push(it));
+  const ms = shuffle(Object.keys(byM));
+  for (let i = 0; picked.length < n && ms.some(m => byM[m].length); i++) {
+    const m = ms[i % ms.length];
+    if (byM[m].length) picked.push(byM[m].pop());
+  }
+  shuffle(ALL_ITEMS.filter(it => !picked.includes(it))).forEach(it => { if (picked.length < n) picked.push(it); });
+  return picked.sort((a, b) => a.mondai - b.mondai);
+}
+function renderCombo() {
+  const due = ALL_ITEMS.filter(it => isQDue(it.qid)).length;
+  const seen = ALL_ITEMS.filter(it => qstat(it.qid)).length;
+  $('mixTodayInfo').textContent = `${ALL_ITEMS.length} câu trong kho · đã làm ${seen}`;
+  $('reviewWrongInfo').textContent = due ? `${due} câu đến hạn ôn` : 'Chưa có câu nào cần ôn';
+  $('synInfo').textContent = `${SYN.length} cặp từ đã ra đề`;
+  const best = state.bookBest || {};
+  $('pastExams').innerHTML = PAST_EXAMS.length ? PAST_EXAMS.map((e, i) => {
+    const b = best['past:' + e.exam];
+    const cls = !b ? '' : b.score === e.qs.length ? ' done' : ' tried';
+    return `<button class="book-test${cls}" data-pe="${i}"><b>${esc(examLabel(e.exam))}</b>
+      <span>${b ? `Cao nhất ${b.score}/${e.qs.length}` : `${e.qs.length} câu`}</span></button>`;
+  }).join('') : '<p class="muted">Chưa có đề thi thật.</p>';
+}
+$('mixToday').addEventListener('click', () => {
+  const items = pickMix(Number($('mixNum').value) || 20);
+  startExam(items.map(mkQ), 'Đề trộn tổng hợp', null, null);
+});
+$('reviewWrong').addEventListener('click', () => {
+  const items = shuffle(ALL_ITEMS.filter(it => isQDue(it.qid))).slice(0, 40).sort((a, b) => a.mondai - b.mondai);
+  if (!items.length) return toast('Chưa có câu nào cần ôn — làm thêm đề nhé!');
+  startExam(items.map(mkQ), 'Ôn câu sai / đến hạn', null, null);
+});
+$('synQuiz').addEventListener('click', () => {
+  if (!SYN.length) return toast('Chưa có dữ liệu từ đồng nghĩa');
+  const items = shuffle(ALL_ITEMS.filter(it => it.mondai === 9)).slice(0, 20);
+  startExam(items.map(mkQ), 'Từ đồng nghĩa JLPT', null, 9);
+});
+$('pastExams').addEventListener('click', e => {
+  const b = e.target.closest('[data-pe]');
+  if (!b) return;
+  const ex = PAST_EXAMS[b.dataset.pe];
+  const items = ALL_ITEMS.filter(it => it.qid.startsWith(`P|${ex.exam}|`));
+  startExam(items.map(mkQ), `${examLabel(ex.exam)} · 文字・語彙 + 文法`, 'past:' + ex.exam, null);
+});
+
 let exam = null;
 let examMondai = 1;
 function resetExam() {
@@ -832,14 +943,21 @@ function resetExam() {
   $('examTitle').textContent = MONDAI_INFO[examMondai].title;
   $('genSection').classList.toggle('hidden', !!MONDAI_INFO[examMondai].noGen);
   $('examDesc').innerHTML = MONDAI_INFO[examMondai].desc + ' Làm hết rồi bấm <b>Nộp bài</b> để chấm. Câu sai sẽ tự đưa vào ôn tập.';
+  renderCombo();
   const best = state.bookBest || {};
   const tests = BOOK_TESTS.filter(t => t.mondai === examMondai);
-  $('bookTests').innerHTML = tests.length ? tests.map(t => {
+  const pasts = PAST_EXAMS.filter(e => e.qs.some(q => q.type === examMondai));
+  $('bookTests').innerHTML = (tests.length ? tests.map(t => {
     const b = best[t.test];
     const cls = !b ? '' : b.score === t.qs.length ? ' done' : ' tried';
-    return `<button class="book-test${cls}" data-i="${BOOK_TESTS.indexOf(t)}"><b>${esc(t.test.replace(/^文字\d /, ''))}</b>
+    return `<button class="book-test${cls}" data-i="${BOOK_TESTS.indexOf(t)}"><b>${esc(t.test.replace(/^\S+ /, ''))}</b>
       <span>${b ? `Cao nhất ${b.score}/${t.qs.length}` : `${t.qs.length} câu`}</span></button>`;
-  }).join('') : '<p class="muted">Chưa có đề trong sách cho dạng này.</p>';
+  }).join('') : '') + pasts.map(e => {
+    const n = e.qs.filter(q => q.type === examMondai).length, key = `past:${e.exam}:${examMondai}`, b = best[key];
+    const cls = !b ? '' : b.score === n ? ' done' : ' tried';
+    return `<button class="book-test past${cls}" data-pm="${e.exam}"><b>${esc(examLabel(e.exam))}</b>
+      <span>${b ? `Cao nhất ${b.score}/${n}` : `${n} câu · đề thật`}</span></button>`;
+  }).join('') || '<p class="muted">Chưa có đề cho dạng này.</p>';
   const log = state.examLog || [];
   $('examHistory').innerHTML = log.length
     ? '<h3>Kết quả gần đây</h3>' + log.slice().reverse().map(r =>
@@ -853,17 +971,22 @@ document.querySelectorAll('.mondai-tabs button').forEach(b => b.addEventListener
   resetExam();
 }));
 $('bookTests').addEventListener('click', e => {
+  const pm = e.target.closest('[data-pm]');
+  if (pm) {
+    const items = ALL_ITEMS.filter(it => it.qid.startsWith(`P|${pm.dataset.pm}|${examMondai}|`));
+    return startExam(items.map(mkQ), `${examLabel(pm.dataset.pm)} · ${MONDAI_INFO[examMondai].title.split('—')[0].trim()}`,
+      `past:${pm.dataset.pm}:${examMondai}`, examMondai);
+  }
   const b = e.target.closest('.book-test');
   if (!b) return;
   const t = BOOK_TESTS[b.dataset.i];
-  startExam(t.qs.map(q => bookQuestion(q, t.mondai)), t.test, t.test, t.mondai);
+  startExam(ALL_ITEMS.filter(it => it.qid.startsWith(`B${t.mondai}|${t.test}|`)).map(mkQ), t.test, t.test, t.mondai);
 });
 $('bookMixStart').addEventListener('click', () => {
-  const all = BOOK_TESTS.filter(t => t.mondai === examMondai).flatMap(t => t.qs);
+  const all = ALL_ITEMS.filter(it => it.mondai === examMondai);
   if (!all.length) return;
   const n = Math.min(Number($('bookMixNum').value) || 9, all.length);
-  startExam(shuffle(all.slice()).slice(0, n).map(q => bookQuestion(q, examMondai)),
-    `問題${examMondai} · Tổng hợp đề sách`, null, examMondai);
+  startExam(shuffle(all.slice()).slice(0, n).map(mkQ), `${MONDAI_INFO[examMondai].title.split('—')[0].trim()} · Trộn sách + đề thật`, null, examMondai);
 });
 $('examStart').addEventListener('click', () => {
   const pool = quizPool($('examScope').value).filter(w => examMondai === 3 ? w.m3 : w.m1);
@@ -887,24 +1010,26 @@ function startExam(qs, name, bookTest, mondai) {
   $('examPaper').classList.remove('hidden');
   $('examSubmit').classList.remove('hidden');
   $('examName').textContent = name;
-  $('examInstr').textContent = MONDAI_INFO[mondai].instr;
+  $('examInstr').classList.add('hidden');
   renderExam(false);
   $('examTimer').textContent = '00:00';
   exam.timer = setInterval(() => { $('examTimer').textContent = fmtTime(Math.floor((Date.now() - exam.start) / 1000)); }, 1000);
   window.scrollTo(0, 0);
 }
 function explainHtml(q) {
-  const res = q.pick === null ? '⚪ Chưa làm.' : q.options[q.pick] === q.answer ? '✅ Đúng.' : '❌ Sai.';
+  const res = q.pick === null ? '⚪ Chưa làm.' : isAns(q, q.pick) ? '✅ Đúng.' : '❌ Sai.';
   const w = q.w;
   const kanjiText = (q.mondai === 2 ? q.answer : q.target) || '';
-  let html = q.mondai === 7
+  let html = q.mondai === 8 || q.mondai === 9
+    ? `${res} Đáp án: <b class="jp">${esc(q.answer)}</b>`
+    : q.mondai === 7
     ? `${res} Thứ tự đúng: <b>${q.order.join(' → ')}</b> · ★ = <b class="jp">${esc(q.answer)}</b>`
     : q.mondai === 5
-    ? `${res} Câu dùng đúng: <b>câu ${q.options.indexOf(q.answer) + 1}</b> · <b class="jp">${esc(q.word)}</b>${w && hasKanji(w) ? ` <span class="jp">(${esc(w.kanji)})</span>` : ''}`
+    ? `${res} Câu dùng đúng: <b>câu ${ansNo(q)}</b> · <b class="jp">${esc(q.word)}</b>${w && hasKanji(w) ? ` <span class="jp">(${esc(w.kanji)})</span>` : ''}`
     : q.mondai === 6
     ? `${res} Đáp án: <b class="jp">${esc(q.answer)}</b>`
     : q.mondai === 4
-    ? `${res} 「<b class="jp">${esc(q.target)}</b>」 ≈ 「<b class="jp">${esc(q.answerMid)}</b>」 → câu ${q.options.indexOf(q.answer) + 1}`
+    ? `${res} 「<b class="jp">${esc(q.target)}</b>」 ≈ 「<b class="jp">${esc(q.answerMid)}</b>」 → câu ${ansNo(q)}`
     : q.mondai === 3
     ? `${res} Đáp án: <b class="jp">${esc(q.answer)}</b>${w && hasKanji(w) ? ` <span class="jp">(${esc(w.kanji)})</span>` : ''}`
     : q.mondai === 2
@@ -914,16 +1039,17 @@ function explainHtml(q) {
   const mean = w?.mean || q.mean;
   if (mean) html += ` — ${esc(mean)}`;
   if (hv) html += ` · <span class="hvs">${hv}</span>`;
-  if (q.circled && q.options[q.circled - 1] !== q.answer)
+  if (q.circled && !isAns(q, q.circled - 1))
     html += `<div class="muted">📌 Trên sách bạn từng khoanh ${q.circled} (${esc(q.options[q.circled - 1])}) — câu này dễ nhầm, nhớ kỹ nhé.</div>`;
   if (q.xp) {
     html += `<div class="xp"><div class="xp-vi">${q.mondai === 5 ? '📖' : '🇻🇳'} ${nl2br(esc(q.xp.vi))}</div><div class="xp-why">💡 ${esc(q.xp.why)}</div>
-      <ul class="xp-opts">${q.xp.opts.map((o, j) => { const ok = q.options[j] === q.answer;
+      <ul class="xp-opts">${q.xp.opts.map((o, j) => { const ok = isAns(q, j);
         const mark = q.mondai === 7 ? (ok ? '★' : '•') : ok ? '✓' : '✗';
         return `<li class="${ok ? 'ok' : q.mondai === 7 ? 'neutral' : 'bad'}${q.pick === j ? ' picked' : ''}"><b>${mark} ${j + 1}.</b> ${esc(o.replace(/^[✓✗]\s*/, ''))}</li>`; }).join('')}</ul></div>`;
   }
   if (q.note) html += `<div class="muted">⚠️ ${esc(q.note)}</div>`;
   if (w?.ex) html += `<div class="example">${exBlock(w)}</div>`;
+  if (q.src) html += `<div class="muted src-line">📍 ${esc(q.src)}</div>`;
   return html;
 }
 // 文法2 ★: hiện 4 ô trống; khi chấm điền theo thứ tự đúng, tô ô ★
@@ -936,17 +1062,32 @@ function starSentence(q, graded) {
     return `<span class="slot filled${t === '★' ? ' star' : ''}">${esc(q.options[q.order[i] - 1])}</span>`;
   }).join('');
 }
+function passageHtml(q, graded, full) {
+  if (!full) return `<span class="muted">(Đoạn văn ở trên)</span> chỗ trống <span class="blank">（${esc(q.blank)}）</span>`;
+  const mark = `（${q.blank}）`;
+  return `<div class="passage">${nl2br(esc(q.passage)).replace(esc(mark), graded
+    ? `<span class="blank filled">（${esc(q.blank)}: ${esc(q.answer)}）</span>` : `<span class="blank">${esc(mark)}</span>`)}</div>`;
+}
 function renderExam(graded) {
+  let prevM = null, prevPassage = null;
   $('examQs').innerHTML = exam.qs.map((q, i) => {
+    const head = q.mondai !== prevM ? `<p class="exam-instr">${esc(MONDAI_INFO[q.mondai].instr)}</p>` : '';
+    prevM = q.mondai;
+    const fullPassage = q.mondai === 8 && q.passage !== prevPassage;
+    prevPassage = q.mondai === 8 ? q.passage : null;
     const opts = q.options.map((o, j) => {
-      let cls = 'm1-opt' + (q.mondai === 2 ? ' kanji' : q.mondai === 4 || q.mondai === 5 ? ' sent' : '');
+      let cls = 'm1-opt' + (q.mondai === 2 ? ' kanji' : [4, 5, 9].includes(q.mondai) ? ' sent' : '');
       if (q.pick === j) cls += ' picked';
-      if (graded && o === q.answer) cls += ' correct';
+      if (graded && isAns(q, j)) cls += ' correct';
       else if (graded && q.pick === j) cls += ' wrong';
       return `<button class="${cls}" data-q="${i}" data-o="${j}" ${graded ? 'disabled' : ''}><b>${j + 1}</b> ${q.optHtml ? q.optHtml[j] : esc(o)}</button>`;
     }).join('');
-    return `<div class="m1-q">
-      <div class="m1-sent"><span class="m1-no">${i + 1}</span>${q.mondai === 5
+    return `${head}<div class="m1-q">
+      <div class="m1-sent"><span class="m1-no">${i + 1}</span>${q.mondai === 8
+        ? passageHtml(q, graded, fullPassage)
+        : q.mondai === 9
+        ? `<span class="m5-word">${esc(q.word)}</span> <span class="jp-kana">${esc(q.kana || '')}</span>`
+        : q.mondai === 5
         ? `<span class="m5-word">${esc(q.word)}</span>`
         : q.mondai === 7
         ? starSentence(q, graded)
@@ -956,7 +1097,7 @@ function renderExam(graded) {
         : ''}${q.mondai >= 5 ? '' : q.before}${q.mondai >= 5 ? '' : q.mondai === 3
         ? (graded ? `<span class="blank filled">（${esc(q.answer)}）</span>` : '<span class="blank">（　　　）</span>')
         : `<u class="m1-target">${esc(q.target)}</u>`}${q.mondai >= 5 ? '' : q.after}</div>
-      <div class="m1-opts${q.mondai === 4 || q.mondai === 5 ? ' vertical' : ''}">${opts}</div>
+      <div class="m1-opts${[4, 5, 9].includes(q.mondai) ? ' vertical' : ''}">${opts}</div>
       ${graded ? `<div class="m1-explain">${explainHtml(q)}</div>` : ''}</div>`;
   }).join('');
 }
@@ -980,9 +1121,10 @@ $('examSubmit').addEventListener('click', () => {
   let score = 0;
   const wrongQs = [];
   exam.qs.forEach(q => {
-    const ok = q.pick !== null && q.options[q.pick] === q.answer;
+    const ok = q.pick !== null && isAns(q, q.pick);
     if (ok) score++; else wrongQs.push(q);
     if (q.w) recordAnswer(q.w, ok);
+    recordQ(q, ok);
   });
   (state.examLog ||= []).push({ name: exam.name, date: todayStr(), n: exam.qs.length, score, secs });
   state.examLog = state.examLog.slice(-15);

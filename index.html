@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Từ vựng N4 — 30 ngày</title>
-<link rel="stylesheet" href="style.css?v=10">
+<link rel="stylesheet" href="style.css?v=11">
 </head>
 <body>
 <header>
@@ -132,6 +132,19 @@
   <!-- LUYỆN ĐỀ -->
   <section id="view-exam" class="view hidden">
     <div id="examSetup">
+      <h3>🎯 Luyện tổng hợp</h3>
+      <p class="muted">Câu hỏi lấy từ đề sách + đề thi thật JLPT + từ đồng nghĩa. Câu làm sai sẽ quay lại sau 1 → 3 → 7 → 14 ngày cho tới khi nhớ.</p>
+      <div class="combo-grid">
+        <button class="combo-btn" id="mixToday"><b>🔀 Đề trộn tổng hợp</b><span id="mixTodayInfo"></span></button>
+        <button class="combo-btn" id="reviewWrong"><b>🔁 Ôn câu sai / đến hạn</b><span id="reviewWrongInfo"></span></button>
+        <button class="combo-btn" id="synQuiz"><b>🔗 Từ đồng nghĩa JLPT</b><span id="synInfo"></span></button>
+      </div>
+      <div class="inline-row"><span>Số câu đề trộn</span>
+        <select id="mixNum" style="width:auto;display:inline-block;margin:0"><option>10</option><option selected>20</option><option>40</option></select></div>
+      <h4>🗂 Đề thi thật JLPT — làm nguyên đề (文字・語彙 + 文法)</h4>
+      <div id="pastExams" class="book-grid"></div>
+      <hr>
+      <h3>📚 Luyện theo từng dạng</h3>
       <div class="mondai-tabs">
         <button data-m="1">問題1 漢字読み</button>
         <button data-m="2">問題2 表記</button>
@@ -140,16 +153,17 @@
         <button data-m="5">問題5 用法</button>
         <button data-m="6">文法1 文法形式</button>
         <button data-m="7">文法2 ★</button>
+        <button data-m="8">文法3 文章</button>
       </div>
       <h3 id="examTitle"></h3>
       <p class="muted" id="examDesc"></p>
 
-      <h4>📘 Đề trong sách</h4>
+      <h4>📘 Đề sách + 🗂 đề thật theo năm</h4>
       <div id="bookTests" class="book-grid"></div>
       <div class="inline-row">
         <span>Trộn ngẫu nhiên</span>
         <input type="number" id="bookMixNum" value="20" min="5" step="1">
-        <span>câu từ tất cả đề sách</span>
+        <span>câu (đề sách + đề thật)</span>
         <button class="btn" id="bookMixStart">Làm</button>
       </div>
 
@@ -227,7 +241,7 @@
 
 <div id="toast" class="toast hidden"></div>
 
-<script src="data.js?v=10"></script>
-<script src="app.js?v=10"></script>
+<script src="data.js?v=11"></script>
+<script src="app.js?v=11"></script>
 </body>
 </html>

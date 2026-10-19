@@ -289,3 +289,14 @@ h4 { margin: 18px 0 8px; }
 .slot.filled { min-width: 0; padding: 0 4px; border-bottom-color: var(--muted); }
 .slot.filled.star { color: var(--good); border-bottom-color: var(--good); background: var(--good-soft); border-radius: 4px 4px 0 0; }
 .xp-opts li.neutral { color: var(--text); }
+
+/* Luyện tổng hợp */
+.combo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; }
+.combo-btn { display: flex; flex-direction: column; gap: 4px; text-align: left; padding: 12px; border-radius: 12px; cursor: pointer;
+  border: 1px solid var(--accent); background: var(--accent-soft); color: var(--text); }
+.combo-btn b { font-size: 15px; color: var(--accent); }
+.combo-btn span { font-size: 12px; color: var(--muted); }
+.book-test.past { border-style: dashed; }
+.passage { font-family: var(--jp); font-size: 17px; line-height: 2; background: var(--bg); border-radius: 8px; padding: 10px 12px;
+  max-height: 340px; overflow-y: auto; }
+.src-line { margin-top: 6px; font-size: 12px; }
