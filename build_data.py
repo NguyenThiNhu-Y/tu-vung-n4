@@ -30,6 +30,10 @@ for path in sorted(glob.glob(os.path.join(HERE, 'past', '*.jsonl'))):
             q = json.loads(line)
             past.append({k: q[k] for k in ('exam', 'type', 'no', 'sentence', 'word', 'passage', 'blank', 'options',
                                            'answer', 'circled', 'note', 'xp', 'order') if k in q})
+# Đọc hiểu: reading/*.jsonl (mỗi dòng 1 bài đọc)
+reading = []
+for path in sorted(glob.glob(os.path.join(HERE, 'reading', '*.jsonl'))):
+    reading += [json.loads(l) for l in open(path, encoding='utf-8') if l.strip()]
 syn_path = os.path.join(HERE, 'synonyms.jsonl')
 synonyms = [json.loads(l) for l in open(syn_path, encoding='utf-8') if l.strip()] if os.path.exists(syn_path) else []
 ex_path = os.path.join(HERE, 'examples.tsv')
@@ -64,7 +68,9 @@ with open(os.path.join(HERE, 'data.js'), 'w', encoding='utf-8') as f:
     f.write('const MONDAI = ' + json.dumps(mondai, ensure_ascii=False) + ';\n')
     f.write('const PAST = ' + json.dumps(past, ensure_ascii=False) + ';\n')
     f.write('const SYNONYMS = ' + json.dumps(synonyms, ensure_ascii=False) + ';\n')
+    f.write('const READING = ' + json.dumps(reading, ensure_ascii=False) + ';\n')
 print('Có câu ví dụ:', len(words) - len(no_ex), '/', len(words), ('— thiếu: ' + ', '.join(no_ex[:10])) if no_ex else '')
 print('Đề thi thật:', len(past), 'câu,', len({q['exam'] for q in past}), 'đề; đồng nghĩa:', len(synonyms), 'cặp')
+print('Đọc hiểu:', len(reading), 'bài,', sum(len(r['qs']) for r in reading), 'câu')
 print('Đề trong sách:', ', '.join(f'問題{n}: {len(qs)} câu' for n, qs in mondai.items()))
 print(len(words), 'từ;', len(hv), 'chữ Hán;', 'thiếu Hán Việt:', ''.join(missing) or 'không')

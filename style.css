@@ -307,3 +307,50 @@ h4 { margin: 18px 0 8px; }
 .user-chip.off { border-color: var(--line); background: var(--panel); color: var(--muted); font-weight: 400; }
 .sync-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
 .sync-row input { flex: 1; min-width: 180px; margin: 0 !important; }
+
+/* Đọc hiểu */
+.btn.small { padding: 5px 10px; font-size: 13px; }
+.read-tabs { display: flex; gap: 6px; margin: 14px 0 6px; flex-wrap: wrap; }
+.read-tabs button { flex: 1; min-width: 22%; border: 1px solid var(--line); background: var(--panel); color: var(--text);
+  border-radius: 10px; padding: 8px 4px; font-size: 14px; cursor: pointer; font-family: var(--jp); }
+.read-tabs button.active { border: 2px solid var(--accent); color: var(--accent); background: var(--accent-soft); font-weight: 700; }
+.read-guide { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 4px 16px 12px; margin-top: 10px; font-size: 14px; line-height: 1.65; }
+.read-guide details { margin: 8px 0; }
+.read-guide summary { cursor: pointer; padding: 4px 0; }
+.read-guide li { margin-bottom: 5px; }
+.sig-table { border-collapse: collapse; width: 100%; margin: 6px 0; }
+.sig-table td { border-bottom: 1px solid var(--line); padding: 5px 6px; vertical-align: top; }
+.sig-table td.jp { font-family: var(--jp); white-space: nowrap; font-weight: 600; }
+.rd-exam { margin: 14px 0; }
+.rd-exam-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+.book-test.rd-new { border-style: dashed; }
+.read-tools { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 8px 0; }
+.read-tools .check { margin: 0; }
+.read-tip { background: var(--accent-soft); border-radius: 10px; padding: 8px 12px; font-size: 14px; line-height: 1.6; margin-bottom: 8px; }
+#readTimer.over { color: var(--bad); font-weight: 700; }
+.rd-intro { font-family: var(--jp); font-size: 15px; margin: 8px 0 4px; }
+.rd-passage { font-family: var(--jp); font-size: 17px; line-height: 2.1; background: var(--panel); border: 1px solid var(--line);
+  border-radius: 10px; padding: 12px 16px; }
+.rd-passage p { margin: 0; text-indent: 1em; }
+.rd-passage.rd-info p { text-indent: 0; }
+.rd-passage .rd-h { text-align: center; font-weight: 700; font-size: 18px; }
+.rd-passage .rd-right { text-align: right; }
+.rd-table { border-collapse: collapse; width: 100%; margin: 6px 0; font-size: 15px; line-height: 1.7; }
+.rd-table th, .rd-table td { border: 1px solid var(--line); padding: 4px 6px; vertical-align: top; }
+.rd-table th { background: var(--bg); }
+u.ul { text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 5px; }
+mark.ev { background: #fde68a; color: inherit; font-weight: inherit; padding: 0; border-radius: 2px; }
+mark.ev rt { color: var(--muted); }
+.aid-off ruby.aid rt { display: none; }
+.rd-q { margin-top: 12px; }
+.rd-q .m1-sent { font-family: var(--jp); }
+.rd-kind { margin: 6px 0; font-size: 14px; }
+.rd-ev { margin: 4px 0; }
+.rd-ev mark.ev { font-family: var(--jp); }
+.rd-vi { background: var(--bg); border-radius: 10px; padding: 8px 12px; margin-top: 8px; font-size: 15px; line-height: 1.6; }
+.rd-vi p { margin: 4px 0; }
+.rd-result { font-size: 18px; text-align: center; margin: 10px 0 4px; }
+.good-text { color: var(--good); font-size: 14px; }
+.bad-text { color: var(--bad); font-size: 14px; }
+.rd-vocab td.jp small { display: block; color: var(--muted); }
+@media (prefers-color-scheme: dark) { mark.ev { background: #78590a; } }

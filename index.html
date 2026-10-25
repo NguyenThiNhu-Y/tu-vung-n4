@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Từ vựng N4 — 30 ngày</title>
-<link rel="stylesheet" href="style.css?v=12">
+<link rel="stylesheet" href="style.css?v=13">
 </head>
 <body>
 <header>
@@ -15,6 +15,7 @@
     <button data-view="plan">Lịch 30 ngày</button>
     <button data-view="quiz">Quiz</button>
     <button data-view="exam">Luyện đề</button>
+    <button data-view="read">Đọc hiểu</button>
     <button data-view="list">Danh sách</button>
     <button data-view="settings">⚙︎</button>
   </nav>
@@ -200,6 +201,42 @@
     </div>
   </section>
 
+  <!-- ĐỌC HIỂU -->
+  <section id="view-read" class="view hidden">
+    <div id="readHome">
+      <h3>📖 Đọc hiểu 読解 — đề JLPT N4 thật</h3>
+      <p class="muted" id="readStats"></p>
+      <div class="combo-grid">
+        <button class="combo-btn" id="readNext"><b>▶ Bài tiếp theo</b><span id="readNextInfo"></span></button>
+        <button class="combo-btn" id="readRetry"><b>🔁 Làm lại bài sai</b><span id="readRetryInfo"></span></button>
+        <button class="combo-btn" id="readGuideBtn"><b>🧭 Cách làm bài đọc</b><span>Đọc trước khi làm bài đầu tiên</span></button>
+      </div>
+      <div id="readGuide" class="read-guide hidden"></div>
+      <div class="read-tabs" id="readTabs">
+        <button data-p="0">Tất cả</button>
+        <button data-p="4">問題4 短文</button>
+        <button data-p="5">問題5 中文</button>
+        <button data-p="6">問題6 情報検索</button>
+      </div>
+      <p class="muted" id="readTabDesc"></p>
+      <div id="readList"></div>
+    </div>
+    <div id="readRun" class="hidden">
+      <div class="exam-head"><b id="readName"></b><span id="readTimer">00:00</span><button class="btn" id="readQuit">✕</button></div>
+      <div class="read-tools">
+        <label class="check"><input type="checkbox" id="readFuri"> Furigana hỗ trợ</label>
+        <button class="btn small" id="readSpeak">🔊 Nghe bài</button>
+        <button class="btn small" id="readTipBtn">💡 Gợi ý cách làm</button>
+      </div>
+      <div class="read-tip hidden" id="readTip"></div>
+      <p class="exam-instr" id="readInstr"></p>
+      <div id="readBody"></div>
+      <div id="readQs"></div>
+      <button class="btn primary wide" id="readSubmit">Nộp bài</button>
+      <div id="readAfter" class="hidden"></div>
+    </div>
+  </section>
+
   <!-- DANH SÁCH -->
   <section id="view-list" class="view hidden">
     <div class="list-tools">
@@ -251,9 +288,10 @@
 
 <div id="toast" class="toast hidden"></div>
 
-<script src="data.js?v=12"></script>
-<script src="app.js?v=12"></script>
-<script src="sync-config.js?v=12"></script>
-<script src="sync.js?v=12"></script>
+<script src="data.js?v=13"></script>
+<script src="app.js?v=13"></script>
+<script src="reading.js?v=13"></script>
+<script src="sync-config.js?v=13"></script>
+<script src="sync.js?v=13"></script>
 </body>
 </html>

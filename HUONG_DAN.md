@@ -33,6 +33,16 @@ Mở file `index.html` bằng Chrome hoặc Safari (double-click). Không cần 
    Mỗi bài lưu điểm cao nhất. Có thể trộn câu ngẫu nhiên từ các bài, hoặc tạo đề mới từ 806 từ (問題1–3).
    Làm xong bấm *Nộp bài* để chấm và xem giải thích.
 
+6. **Đọc hiểu 読解** (tab *Đọc hiểu*): toàn bộ bài đọc 問題4 短文, 問題5 中文 và 問題6 情報検索 trong các đề JLPT thật.
+   - Bấm **🧭 Cách làm bài đọc** để đọc hướng dẫn: phân bổ thời gian, quy trình 4 bước, mẹo cho từng dạng, các từ "tín hiệu" cần để ý.
+   - Khi làm bài có đồng hồ kèm thời gian mục tiêu. Có thể bật/tắt *Furigana hỗ trợ*, bấm 🔊 để nghe cả bài, và 💡 để xem gợi ý cách làm bài đó.
+   - Sau khi nộp bài:
+     - căn cứ của đáp án được **tô vàng** ngay trong bài;
+     - mỗi câu có giải thích vì sao đúng, vì sao từng lựa chọn kia sai, và mẹo cho dạng câu hỏi đó;
+     - xem được bản dịch cả bài và bảng từ vựng của bài.
+   - Bài làm sai quay lại ở nút **🔁 Làm lại bài sai** theo lịch 1 → 3 → 7 → 14 ngày.
+   - Mỗi ngày nên làm 1–2 bài: lần đầu tắt furigana và làm như thi thật, sau đó bật furigana đọc kỹ lại.
+
 Ngày 1–22 học từ mới, ngày 23–30 chỉ ôn và làm quiz "Từ hay sai".
 
 ## Lưu ý
@@ -40,4 +50,9 @@ Ngày 1–22 học từ mới, ngày 23–30 chỉ ôn và làm quiz "Từ hay s
 - Muốn sửa hoặc thêm từ: sửa `vocab.txt` (mỗi dòng `kana|chữ Hán|nghĩa`), sau đó chạy `python3 build_data.py`.
 - Đề trong sách nằm ở `mondai1.jsonl` … `mondai7.jsonl` (mỗi dòng một câu; `[ ]` là phần gạch chân, `（　）` là chỗ trống, `answer` là đáp án đúng, `note` là ghi chú khi nghi sách in lỗi, `xp` là bản dịch + giải thích, `order` là thứ tự đúng của đề ★).
 - Đề thi thật nằm trong `past/<năm-tháng>.jsonl` (type 1–8 = 問題1–5, 文法1–3); bảng đồng nghĩa ở `synonyms.jsonl`.
+- Bài đọc nằm trong `reading/<năm-tháng>.jsonl`, mỗi dòng là một bài đọc kèm câu hỏi. Ký hiệu trong bài:
+  - `{漢字|よみ}`: furigana in sẵn trong đề;
+  - `[漢字|よみ]`: furigana hỗ trợ (bật/tắt được);
+  - `__…__`: phần gạch chân;
+  - `ev`: đoạn căn cứ sẽ được tô vàng.
 - Câu ví dụ nằm trong `examples.tsv` (mỗi dòng `ID<TAB>câu<TAB>bản dịch`). Trong câu, `{漢字|かんじ}` là furigana, còn `[...]` đánh dấu từ đang học. Sửa xong cũng chạy lại `python3 build_data.py`.
